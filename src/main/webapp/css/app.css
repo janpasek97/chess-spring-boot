@@ -11,3 +11,9 @@ body {
     background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
     background: linear-gradient(-135deg, #c850c0, #4158d0);
 }
+
+.user-avatar {
+    width: 7%;
+    height: 7%;
+    opacity: 80%;
+}

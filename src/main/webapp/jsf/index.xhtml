@@ -7,10 +7,27 @@
                 template="/WEB-INF/jsf/base.xhtml"
                 lang="cs">
 
-    <ui:define name="title">Data Demo</ui:define>
+    <ui:define name="title">Lobby</ui:define>
 
     <ui:define name="body">
-        Test page
+        <ui:repeat value="#{activeUsersService.getLoggedInUsers()}" var="user">
+            <li>#{user}<div class="user-avatar d-inline-flex">  </div></li>
+        </ui:repeat>
+
+    </ui:define>
+
+    <ui:define name="script">
+        <script type="text/javascript" src="/js/multiavatar.min.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                $(".user-avatar").each(function(i, obj) {
+                    var randomHash = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                    var svgAvatar = multiavatar(randomHash);
+                    $(obj).html(svgAvatar);
+                });
+
+            });
+        </script>
     </ui:define>
 
 </ui:composition>

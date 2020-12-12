@@ -8,15 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.WebApplicationInitializer;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import java.util.List;
 
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class AuthInitializer implements InitializingBean {
+public class AuthInitializer implements InitializingBean, WebApplicationInitializer {
     private final UserRepository userRepo;
     private final RoleRepository roleRepo;
     private final PasswordEncoder encoder;
@@ -31,7 +35,6 @@ public class AuthInitializer implements InitializingBean {
     private String userRoleName;
     @Value("${adminRole}")
     private String adminRoleName;
-
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -52,5 +55,10 @@ public class AuthInitializer implements InitializingBean {
             adminUser.addRole(adminRole);
             userRepo.saveAndFlush(adminUser);
         }
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.addListener(HttpSessionEventPublisher.class);
     }
 }
