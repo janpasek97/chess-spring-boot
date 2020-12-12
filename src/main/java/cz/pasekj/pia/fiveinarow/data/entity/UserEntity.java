@@ -25,13 +25,13 @@ public class UserEntity {
     @Column(columnDefinition = "boolean default true")
     private boolean enabled;
 
-    @OneToMany(mappedBy = "userFrom")
+    @OneToMany(mappedBy = "userFrom", cascade = CascadeType.REMOVE)
     private List<FriendsListEntity> friendTo;
 
-    @OneToMany(mappedBy = "userTo")
+    @OneToMany(mappedBy = "userTo", cascade = CascadeType.REMOVE)
     private List<FriendsListEntity> friendFrom;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "user_has_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

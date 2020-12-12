@@ -1,4 +1,4 @@
-package cz.pasekj.pia.fiveinarow.services.authorization;
+package cz.pasekj.pia.fiveinarow.authorization;
 
 import cz.pasekj.pia.fiveinarow.data.entity.RoleEntity;
 import cz.pasekj.pia.fiveinarow.data.entity.UserEntity;
@@ -7,6 +7,7 @@ import cz.pasekj.pia.fiveinarow.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class AuthInitializer implements InitializingBean {
     private final UserRepository userRepo;
     private final RoleRepository roleRepo;
+    private final PasswordEncoder encoder;
 
     @Value("${defUsername}")
     private String adminUsername;
@@ -46,7 +48,7 @@ public class AuthInitializer implements InitializingBean {
         RoleEntity adminRole = roleRepo.findByName(adminRoleName);
         UserEntity adminUser = userRepo.findByUsername(adminUsername);
         if(adminUser == null) {
-            adminUser = new UserEntity(adminUsername, adminEmail, adminPassword, true);
+            adminUser = new UserEntity(adminUsername, adminEmail, encoder.encode(adminPassword), true);
             adminUser.addRole(adminRole);
             userRepo.saveAndFlush(adminUser);
         }
