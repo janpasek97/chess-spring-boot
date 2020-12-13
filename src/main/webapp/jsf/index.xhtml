@@ -10,22 +10,53 @@
     <ui:define name="title">Lobby</ui:define>
 
     <ui:define name="body">
-        <ui:repeat value="#{activeUsersService.getLoggedInUsers()}" var="user">
-            <li>#{user}<div class="user-avatar d-inline-flex">  </div></li>
-        </ui:repeat>
+
+        <div class="container">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Users</h3>
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="navOnline" onclick="navOnlineActive()" href="#">Online</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="navFriends" onclick="navFriendsActive()" href="#">Friends</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="navAll" onclick="navAllActive()" href="#">All</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10 p-4">
+                            <div class="container" id="userListContainer">
+                                <hr/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <nav aria-label="pagination">
+                            <ul class="pagination">
+                                <li id="navPrev" class="page-item" style="visibility: hidden"><a class="page-link" href="#" onclick="onPrevPage()">&lt;</a></li>
+                                <li id="navCurrent" class="page-item" style="visibility: hidden"><a id="currentPageNr" class="page-link" href="#">current</a></li>
+                                <li id="navNext" class="page-item" style="visibility: hidden"><a class="page-link" href="#" onclick="onNextPage()">&gt;</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </ui:define>
 
     <ui:define name="script">
+
+
         <script type="text/javascript" src="/js/multiavatar.min.js"></script>
         <script type="text/javascript">
             jQuery(document).ready(function ($) {
-                $(".user-avatar").each(function(i, obj) {
-                    var randomHash = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                    var svgAvatar = multiavatar(randomHash);
-                    $(obj).html(svgAvatar);
-                });
-
+                loadUsersFromUrl("/users/online", currentPage, usersPerPage);
             });
         </script>
     </ui:define>

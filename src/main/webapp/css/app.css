@@ -13,7 +13,9 @@ body {
 }
 
 .user-avatar {
-    width: 7%;
-    height: 7%;
     opacity: 80%;
+}
+
+.btn-img {
+    opacity: 70%;
 }
