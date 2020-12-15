@@ -19,3 +19,10 @@ body {
 .btn-img {
     opacity: 70%;
 }
+
+.bottomright {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-size: 18px;
+}

@@ -54,7 +54,7 @@ function loadUsersFromUrl(url, page, size) {
             }
             userInfo += '</div>'
             userInfo += '<div class="col-2 ml-auto">';
-            userInfo += '<span><button class="btn btn-primary"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
+            userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\''+ username +'\')"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
             if(online) {
                 userInfo += '<span><button class="btn btn-success ml-2"><img src="/img/play.png" width="20px" class="btn-img"/></button></span>';
             } else {
@@ -137,7 +137,6 @@ function parseLinkHeader(header) {
             }
         }
     }
-    console.log(parsed);
     return parsed;
 }
 

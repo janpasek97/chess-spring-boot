@@ -48,11 +48,14 @@
             </div>
         </div>
 
+        <div id="toastContainer" aria-live="polite" aria-atomic="true" class="bottomright">
+            <!--      Toasts will live here      -->
+        </div>
+
     </ui:define>
 
     <ui:define name="script">
-
-
+        <script type="text/javascript" src="/js/lobby.js"></script>
         <script type="text/javascript" src="/js/multiavatar.min.js"></script>
         <script type="text/javascript">
             jQuery(document).ready(function ($) {
