@@ -25,11 +25,16 @@ public class UserEntity {
     @Column(columnDefinition = "boolean default true")
     private boolean enabled;
 
-    @OneToMany(mappedBy = "userFrom", cascade = CascadeType.REMOVE)
-    private List<FriendsListEntity> friendTo;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "friends_list",
+            joinColumns = @JoinColumn(name = "from_user_fk", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "to_user_fk", referencedColumnName = "id")
+    )
+    private List<UserEntity> friendsFrom;
 
-    @OneToMany(mappedBy = "userTo", cascade = CascadeType.REMOVE)
-    private List<FriendsListEntity> friendFrom;
+    @ManyToMany(mappedBy = "friendsFrom")
+    private List<UserEntity> friendsTo;
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
@@ -64,12 +69,12 @@ public class UserEntity {
         return enabled;
     }
 
-    public List<FriendsListEntity> getFriendTo() {
-        return friendTo;
+    public List<UserEntity> getFriendTo() {
+        return friendsTo;
     }
 
-    public List<FriendsListEntity> getFriendFrom() {
-        return friendFrom;
+    public List<UserEntity> getFriendFrom() {
+        return friendsFrom;
     }
 
     public List<RoleEntity> getRoles() {
@@ -80,4 +85,25 @@ public class UserEntity {
         if(this.roles == null) this.roles = new ArrayList<>();
         this.roles.addAll(Arrays.asList(roles));
     }
+
+    public void addFriendTo(UserEntity to) {
+        if(this.friendsTo == null) this.friendsTo = new ArrayList<>();
+        this.friendsTo.add(to);
+    }
+
+    public void addFriendFrom(UserEntity from) {
+        if(this.friendsFrom == null) this.friendsFrom = new ArrayList<>();
+        this.friendsFrom.add(from);
+    }
+
+    public void removeFriendTo(UserEntity to) {
+        if(this.friendsTo == null) this.friendsTo = new ArrayList<>();
+        this.friendsTo.remove(to);
+    }
+
+    public void removeFriendFrom(UserEntity from) {
+        if(this.friendsFrom == null) this.friendsFrom = new ArrayList<>();
+        this.friendsFrom.remove(from);
+    }
+
 }

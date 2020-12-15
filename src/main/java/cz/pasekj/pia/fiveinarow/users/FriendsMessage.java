@@ -1,4 +1,4 @@
-package cz.pasekj.pia.fiveinarow.notification;
+package cz.pasekj.pia.fiveinarow.users;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class FriendsMessage {
         this.action = action;
     }
 
-    enum FriendsMessageAction {
+    public enum FriendsMessageAction {
         FRIENDS_ADD, FRIENDS_ACCEPT, FRIENDS_REFUSE;
     }
 }
