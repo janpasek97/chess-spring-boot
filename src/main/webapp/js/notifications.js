@@ -27,6 +27,14 @@ function addFriend(username) {
         JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_ADD"}));
 }
 
+function removeFriend(username) {
+    var from = $("#usernameHidden").val();
+    var to = username;
+
+    stompClient.send("/app-ws/secured/friends", {},
+        JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_REMOVE"}));
+}
+
 function acceptFriend(username) {
     var from = $("#usernameHidden").val();
     var to = username;
@@ -46,6 +54,8 @@ function handleNotification(message) {
        handleAddFriendNotification(message);
    } else if(message.action === "FRIENDS_ACCEPT") {
        handleFriendsAcceptNotification(message);
+   } else if(message.action === "FRIENDS_REMOVE") {
+       refresh();
    }
 }
 
@@ -65,6 +75,7 @@ function handleFriendsAcceptNotification(message){
     toast += '</div>';
     $("#toastContainer").append(toast);
     $("#toast-"+toastID).toast("show");
+    refresh();
 }
 
 function handleAddFriendNotification(message) {
@@ -80,7 +91,7 @@ function handleAddFriendNotification(message) {
     toast += '<div class="toast-body align-content-center">';
     toast += 'User '+message.from+" asked you to become friends! <br/>";
     toast += '<span class="align-content-center w-100" style="display: inline-flex">';
-    toast += '<button type="button" class="btn btn-success ml-auto mt-2" onclick="acceptFriend(\''+ message.from +'\')" data-dismiss="toast">Accept</button>';
+    toast += '<button type="button" class="btn btn-success ml-auto mt-2" onclick="acceptFriend(\''+ message.from +'\'); refresh();" data-dismiss="toast">Accept</button>';
     toast += '<button type="button" class="btn btn-danger mr-auto ml-1 mt-2" onclick="refuseFriend(\''+ message.from +'\')" data-dismiss="toast">Refuse</button>';
     toast += '</span>';
     toast += '</div>';

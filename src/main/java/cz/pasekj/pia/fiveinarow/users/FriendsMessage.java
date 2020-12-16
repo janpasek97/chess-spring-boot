@@ -15,6 +15,6 @@ public class FriendsMessage {
     }
 
     public enum FriendsMessageAction {
-        FRIENDS_ADD, FRIENDS_ACCEPT, FRIENDS_REFUSE;
+        FRIENDS_ADD, FRIENDS_ACCEPT, FRIENDS_REFUSE, FRIENDS_REMOVE
     }
 }

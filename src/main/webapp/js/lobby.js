@@ -5,6 +5,25 @@ var currentPage = 0;
 var lastLoadURL = ""
 const usersPerPage = 4;
 
+$('#removeFriendModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var user = button.data('whatever');
+    var modal = $(this);
+    modal.find('#removeFriendModalContent').html("Do you really want to remove user <b>"+ user +"</b> from your friends?");
+    modal.find('#removeFriendConfirmBtn').attr("onclick", "removeFriend('"+ user +"'); refresh();");
+});
+
+async function refresh(time = 500) {
+    if (time > 0) {
+        await sleep(time);
+    }
+    loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function navOnlineActive() {
     currentPage = 0;
     navAll.removeClass("active");
@@ -18,6 +37,7 @@ function navFriendsActive() {
     navAll.removeClass("active");
     navFriends.addClass("active");
     navOnline.removeClass("active");
+    loadUsersFromUrl("/users/friends", currentPage, usersPerPage);
 }
 
 function navAllActive() {
@@ -42,6 +62,7 @@ function loadUsersFromUrl(url, page, size) {
             var svg = multiavatar(item.username);
             var username = item.username;
             var online = item.online;
+            var friends = item.friend;
             var userInfo= '';
             userInfo = '<div class="row user-item">';
             userInfo += '<div class="col-1 user-avatar">' + svg + '</div>';
@@ -54,7 +75,13 @@ function loadUsersFromUrl(url, page, size) {
             }
             userInfo += '</div>'
             userInfo += '<div class="col-2 ml-auto">';
-            userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\''+ username +'\')"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
+            if(!friends && online) {
+                userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\'' + username + '\')"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
+            } else if (!friends) {
+                userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\'' + username + '\')" disabled><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
+            } else {
+                userInfo += '<span><button class="btn btn-warning" onclick="" data-toggle="modal" data-target="#removeFriendModal" data-whatever="' + username + '"><img src="/img/remove-friend.png" width="20px" class="btn-img"/></button></span>';
+            }
             if(online) {
                 userInfo += '<span><button class="btn btn-success ml-2"><img src="/img/play.png" width="20px" class="btn-img"/></button></span>';
             } else {
@@ -107,7 +134,7 @@ function parseLinkHeader(header) {
         "last": null
     };
 
-    if(header != null){
+    if (header != null) {
         var headerParts = header.split(",");
         for (var i = 0; i < headerParts.length; i++) {
             var part = headerParts[i];
@@ -116,7 +143,7 @@ function parseLinkHeader(header) {
 
             var rel = part.match(relRegex);
             var link = part.match(linkRegex);
-            if(rel == null || link == null) continue;
+            if (rel == null || link == null) continue;
 
             rel = rel[0].toUpperCase();
             link = link[0];

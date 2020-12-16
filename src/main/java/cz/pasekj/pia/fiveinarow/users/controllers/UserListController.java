@@ -7,6 +7,7 @@ import cz.pasekj.pia.fiveinarow.support.ResourceNotFoundException;
 import cz.pasekj.pia.fiveinarow.users.UserInfo;
 import cz.pasekj.pia.fiveinarow.users.services.AllUsersService;
 import cz.pasekj.pia.fiveinarow.users.services.CurrentUserService;
+import cz.pasekj.pia.fiveinarow.users.services.FriendsService;
 import cz.pasekj.pia.fiveinarow.users.services.OnlineUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,6 +34,7 @@ public class UserListController {
     private final OnlineUsersService onlineUsersService;
     private final CurrentUserService currentUserService;
     private final AllUsersService allUsersService;
+    private final FriendsService friendsService;
 
     @GetMapping(value = "/users/all", params = {"page", "size"})
     List<UserInfo> getAllUsers(@RequestParam("page") int page,
@@ -42,6 +44,10 @@ public class UserListController {
         String currentUsername = currentUserService.getCurrentUserName();
 
         Page<UserInfo> users = allUsersService.getAllUsers(PageRequest.of(page, size), currentUsername);
+        users.getContent().forEach(userInfo -> {
+            userInfo.friend = friendsService.areFriends(currentUsername, userInfo.username);
+        });
+
         if(page > users.getTotalPages()) {
             throw new ResourceNotFoundException("Page access out of range");
         }
@@ -66,6 +72,10 @@ public class UserListController {
         String currentUsername = currentUserService.getCurrentUserName();
 
         Page<UserInfo> onlineUsers = onlineUsersService.getLoggedInUsers(PageRequest.of(page, size), currentUsername);
+        onlineUsers.getContent().forEach(userInfo -> {
+            userInfo.friend = friendsService.areFriends(currentUsername, userInfo.username);
+        });
+
         if (page > onlineUsers.getTotalPages()) {
             throw new ResourceNotFoundException("Page access out of range");
         }
@@ -78,5 +88,29 @@ public class UserListController {
                 size));
 
         return onlineUsers.getContent();
+    }
+
+    @GetMapping(value = "/users/friends", params = {"page", "size"})
+    List<UserInfo> getFriendsList(@RequestParam("page") int page,
+                                  @RequestParam("size") int size,
+                                  UriComponentsBuilder uriBuilder,
+                                  HttpServletResponse response) {
+
+        String currentUsername = currentUserService.getCurrentUserName();
+
+        Page<UserInfo> users = friendsService.getFriendsOf(currentUsername, PageRequest.of(page, size));
+        if(page > users.getTotalPages()) {
+            throw new ResourceNotFoundException("Page access out of range");
+        }
+
+        eventPublisher.publishEvent(new PaginatedResultsRetrievedEvent<>(
+                UserInfo.class,
+                uriBuilder,
+                response,
+                page,
+                users.getTotalPages(),
+                size));
+
+        return users.getContent();
     }
 }

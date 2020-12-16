@@ -45,7 +45,7 @@ public class OnlineUsersServiceImpl implements OnlineUsersService {
             if (principal instanceof User) {
                 User user = (User)principal;
                 if(sessionRegistry.getAllSessions(user, false).size() > 0) {
-                    activeUsers.add(new UserInfo(user.getUsername(), true));
+                    activeUsers.add(new UserInfo(user.getUsername(), true, false));
                 }
             }
         }

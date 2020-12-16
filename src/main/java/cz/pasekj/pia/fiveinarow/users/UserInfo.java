@@ -5,13 +5,15 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
 
     public String username;
-    public boolean online;
+    public boolean online = false;
+    public boolean friend = false;
 
     public UserInfo() { }
 
-    public UserInfo(String username, boolean online) {
+    public UserInfo(String username, boolean online, boolean friend) {
         this.username = username;
         this.online = online;
+        this.friend = friend;
     }
 
     @Override

@@ -31,7 +31,10 @@ public class MessageController {
                 friendsService.confirmFriend(msg.getTo(), msg.getFrom());
                 break;
             case FRIENDS_REFUSE:
-                friendsService.requestFriend(msg.getTo(), msg.getFrom());
+                friendsService.refuseFriend(msg.getTo(), msg.getFrom());
+                break;
+            case FRIENDS_REMOVE:
+                friendsService.removeFriend(msg.getFrom(), msg.getTo());
                 break;
         }
 
