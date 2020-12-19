@@ -14,4 +14,5 @@ public interface FriendsService {
     void removeFriend(String usernameFrom, String usernameTo);
     List<UserInfo> getFriendsOf(String username);
     Page<UserInfo> getFriendsOf(String username, Pageable pageable);
+    List<UserInfo> getFriendsRequestsOf(String username);
 }

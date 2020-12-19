@@ -134,4 +134,25 @@ public class FriendsServiceImpl implements FriendsService {
         int end = (int) (Math.min((start + pageable.getPageSize()), friends.size()));
         return new PageImpl<>(friends.subList(start, end), pageable, friends.size());
     }
+
+    @Override
+    public List<UserInfo> getFriendsRequestsOf(String username) {
+        List<UserInfo> friends = new ArrayList<>();
+
+        UserEntity userEntity = userRepository.findByUsername(username);
+        List<UserEntity> friendsFrom = userEntity.getFriendFrom();
+        List<UserEntity> friendsTo = userEntity.getFriendTo();
+
+        Set<UserEntity> requestedFrom = friendsFrom
+                .stream()
+                .distinct()
+                .filter(userEntity1 -> !friendsTo.contains(userEntity1))
+                .collect(Collectors.toSet());
+
+        for (UserEntity user : requestedFrom) {
+            UserInfo friend = new UserInfo(user.getUsername(), onlineUsersService.isUserLoggedIn(user.getUsername()), true);
+            friends.add(friend);
+        }
+        return friends;
+    }
 }

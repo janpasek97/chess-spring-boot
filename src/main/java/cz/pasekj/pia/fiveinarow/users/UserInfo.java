@@ -1,7 +1,10 @@
 package cz.pasekj.pia.fiveinarow.users;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
+@Getter
 public class UserInfo implements Serializable {
 
     public String username;

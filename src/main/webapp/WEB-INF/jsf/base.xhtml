@@ -45,6 +45,11 @@
                         </li>
                     </ul>
                 </sec:authorize>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="/profile" class="nav-link">Profile</a>
+                    </li>
+                </ul>
                 <ui:insert name="navigation"> </ui:insert>
                 <span class="ml-auto mt-auto mb-auto text-white">#{currentUserService.getCurrentUserName()}</span>
                 <ul class="navbar-nav">
