@@ -81,6 +81,19 @@ public class UserEntity {
         return roles;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void clearRoles() {
+        if(this.roles == null) this.roles = new ArrayList<>();
+        this.roles.clear();
+    }
+
     public void addRole(RoleEntity... roles) {
         if(this.roles == null) this.roles = new ArrayList<>();
         this.roles.addAll(Arrays.asList(roles));

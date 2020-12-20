@@ -3,22 +3,21 @@ package cz.pasekj.pia.fiveinarow.users.services.impl;
 import cz.pasekj.pia.fiveinarow.data.entity.RoleEntity;
 import cz.pasekj.pia.fiveinarow.data.entity.UserEntity;
 import cz.pasekj.pia.fiveinarow.data.repository.UserRepository;
-import cz.pasekj.pia.fiveinarow.users.services.CurrentUserService;
+import cz.pasekj.pia.fiveinarow.users.services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("currentUserService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
-public class CurrentUserServiceImpl implements CurrentUserService {
+public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserRepository userRepository;
 
@@ -37,24 +36,34 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public String getCurrentUserEmail() {
         String currentUserName = getCurrentUserName();
-        UserEntity user = userRepository.findByUsername(currentUserName);
-        if(user == null) {
-            return "User details not found!";
-        } else {
-            return user.getEmail();
-        }
+        return getEmailOf(currentUserName);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<String> getCurrentUserRoles() {
-        List<String> roles = new LinkedList<>();
         String currentUserName = getCurrentUserName();
-        UserEntity user = userRepository.findByUsername(currentUserName);
+        return getRolesOf(currentUserName);
+    }
+
+    @Override
+    public String getEmailOf(String username) {
+        UserEntity user = userRepository.findByUsername(username);
+        if(user != null) {
+            return user.getEmail();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getRolesOf(String username) {
+        UserEntity user = userRepository.findByUsername(username);
+        List<String> roles = new ArrayList<>();
         if(user != null) {
             for (RoleEntity role : user.getRoles()) {
-                String roleName = role.getName().substring(5).toLowerCase();
-                roles.add((new SimpleGrantedAuthority(roleName)).getAuthority());
+                roles.add(role.getName().substring(5));
             }
         }
         return roles;

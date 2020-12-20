@@ -3,11 +3,14 @@ package cz.pasekj.pia.fiveinarow.users;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 public class UserInfo implements Serializable {
 
     public String username;
+    public String email;
+    public String[] roles;
     public boolean online = false;
     public boolean friend = false;
 
@@ -17,6 +20,13 @@ public class UserInfo implements Serializable {
         this.username = username;
         this.online = online;
         this.friend = friend;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = new String[roles.size()];
+        for (int i = 0; i < roles.size(); i++) {
+            this.roles[i] = roles.get(i);
+        }
     }
 
     @Override

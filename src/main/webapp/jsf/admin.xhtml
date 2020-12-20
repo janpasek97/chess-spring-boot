@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:sec="https://joinfaces.org/security"
+
+                template="/WEB-INF/jsf/base.xhtml"
+                lang="cs">
+
+    <ui:define name="title">Lobby</ui:define>
+
+    <ui:define name="body">
+
+        <div class="container">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Administration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10 p-4">
+                            <div class="alert alert-danger alert-dismissible fade show" hidden="hidden" id="saveErrorAlert" role="alert">
+                                <span id="errorMessage"> </span>
+                                <button type="button" class="close" onclick="hideError();" aria-label="Close">
+                                    <span aria-hidden="true">&#215;</span>
+                                </button>
+                            </div>
+                            <div class="alert alert-success alert-dismissible fade show" hidden="hidden" id="saveOkAlert" role="alert">
+                                <span id="successMessage">User details successfully changed.</span>
+                                <button type="button" class="close" onclick="hideOk();" aria-label="Close">
+                                    <span aria-hidden="true">&#215;</span>
+                                </button>
+                            </div>
+                            <div class="container" id="adminPageContainer">
+                                <h4>Manual search:</h4>
+                                <hr/>
+                                <form class="form-inline" onsubmit="editUser();return false;">
+                                    <div class="form-group mb-2">
+                                        <label for="usernameInput" class="sr-only">Username:</label>
+                                        <input type="text" class="form-control" id="usernameInput" placeholder="Enter username to edit" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mb-2 ml-2">Edit user</button>
+                                </form>
+                                <h4 class="mt-5">List of users:</h4>
+                                <hr/>
+                                <div class="container" id="userListContainer">
+
+                                </div>
+                                <div class="row justify-content-center">
+                                    <nav aria-label="pagination">
+                                        <ul class="pagination">
+                                            <li id="navPrev" class="page-item" style="visibility: hidden"><a class="page-link" href="#" onclick="onPrevPage()">&lt;</a></li>
+                                            <li id="navCurrent" class="page-item" style="visibility: hidden"><a id="currentPageNr" class="page-link" href="#">current</a></li>
+                                            <li id="navNext" class="page-item" style="visibility: hidden"><a class="page-link" href="#" onclick="onNextPage()">&gt;</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Tournament setup</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10 p-4">
+                            <div class="container" id="tournamentSetupContainer">
+                                Test
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toastContainer" aria-live="polite" aria-atomic="true" class="bottomright">
+            <!--      Toasts will live here      -->
+        </div>
+
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit user</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearModal();">
+                            <span aria-hidden="true">&#215;</span>
+                        </button>
+                    </div>
+                    <div id="editModalContent" class="modal-body">
+                        <div id="errorModalAlert" class="alert alert-danger" role="alert" hidden="hidden">
+                            User does not exist!
+                        </div>
+                        <form>
+                            <div class="form-group row">
+                                <label for="inputUsernameEdit" class="col-sm-2 col-form-label">Username</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="inputUsernameEdit"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmaiEdit" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" readonly="readonly" class="form-control-plaintext" id="inputEmaiEdit" placeholder="Email"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPasswordEdit" class="col-sm-2 col-form-label">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="inputPasswordEdit" placeholder="Password"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-2">Roles</div>
+                                <div class="col-sm-10">
+                                    <ui:repeat var="role" varStatus="status" value="#{rolesService.getRoles()}">
+                                    <div class="form-check">
+                                        <input class="form-check-input roleCheck" type="checkbox" value="#{role}" id="roleCheck#{role}"/>
+                                        <label class="form-check-label" for="roleCheck#{role}">
+                                            #{role}
+                                        </label>
+                                    </div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearModal();">Cancel</button>
+                        <button type="button" id="saveDetailsBtn" class="btn btn-success" data-dismiss="modal" onclick="saveDetails(); clearModal();">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="script">
+        <script type="text/javascript" src="/js/multiavatar.min.js"></script>
+        <script type="text/javascript" src="/js/admin.js"></script>
+        <script>
+            jQuery(document).ready(function ($) {
+                loadUsersFromUrl("/users/all", currentPage, usersPerPage);
+            });
+        </script>
+    </ui:define>
+
+</ui:composition>

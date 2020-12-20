@@ -93,6 +93,12 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20201115</version>
+		</dependency>
+
 
 		<!-- Webjars core - provides our application with the /webjars folder containing
 			third party CSS and JS resources -->
