@@ -75,10 +75,8 @@ function loadUsersFromUrl(url, page, size) {
             }
             userInfo += '</div>'
             userInfo += '<div class="col-2 ml-auto">';
-            if(!friends && online) {
+            if(!friends) {
                 userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\'' + username + '\')"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
-            } else if (!friends) {
-                userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\'' + username + '\')" disabled><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
             } else {
                 userInfo += '<span><button class="btn btn-warning" onclick="" data-toggle="modal" data-target="#removeFriendModal" data-whatever="' + username + '"><img src="/img/remove-friend.png" width="20px" class="btn-img"/></button></span>';
             }
