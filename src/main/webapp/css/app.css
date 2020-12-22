@@ -26,3 +26,16 @@ gith
     right: 16px;
     font-size: 18px;
 }
+
+#board {
+    background-color: #f9f9f9;
+    border: 1px solid #f1f1f1;
+    box-shadow: 4px 4px 6px #484848;
+}
+
+#gameCard {
+    background-image: url('/img/Free_Wood_Texture_10.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}

@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:sec="https://joinfaces.org/security"
+
+                template="/WEB-INF/jsf/base.xhtml"
+                lang="cs">
+
+    <ui:define name="title">Lobby</ui:define>
+
+    <ui:define name="body">
+
+        <div class="container">
+            <div class="card mt-4 border-light" style="border-width: 5px;">
+                <div class="card-header">
+                    <h3>Game vs <b>Admin</b></h3>
+                </div>
+                <div class="card-body" id="gameCard">
+                    <div class="row justify-content-center">
+                        <div class="col-12 p-4">
+                            <div id="gameContainer" class="container">
+                                <div class="row align-content-center">
+                                    <div class="col-auto mr-auto ml-auto">
+                                        <canvas id="board" width="820" height="640" onclick="onCanvasClick(event)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toastContainer" aria-live="polite" aria-atomic="true" class="bottomright">
+            <!--      Toasts will live here      -->
+        </div>
+
+        <div class="modal fade" id="removeFriendModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="removeModalLabel">Remove friend?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&#215;</span>
+                        </button>
+                    </div>
+                    <div id="removeFriendModalContent" class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="removeFriendConfirmBtn" class="btn btn-danger" data-dismiss="modal" onclick="">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="script">
+        <script type="text/javascript" src="/js/game.js"></script>
+        <script type="text/javascript" src="/js/multiavatar.min.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                drawBoard(10, 10);
+            });
+        </script>
+    </ui:define>
+
+</ui:composition>
