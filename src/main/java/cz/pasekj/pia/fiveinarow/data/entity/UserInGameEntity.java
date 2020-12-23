@@ -5,11 +5,11 @@ import org.springframework.data.redis.core.RedisHash;
 import java.io.Serializable;
 
 @RedisHash("UserInGame")
-public class UserInGame implements Serializable {
+public class UserInGameEntity implements Serializable {
     private final String id;
     private final String gameId;
 
-    public UserInGame(String id, String gameId) {
+    public UserInGameEntity(String id, String gameId) {
         this.id = id;
         this.gameId = gameId;
     }

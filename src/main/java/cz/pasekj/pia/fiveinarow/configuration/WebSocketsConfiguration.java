@@ -21,5 +21,7 @@ public class WebSocketsConfiguration implements WebSocketMessageBrokerConfigurer
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/secured/friends");
         registry.addEndpoint("/secured/friends").withSockJS();
+        registry.addEndpoint("/secured/game");
+        registry.addEndpoint("/secured/game").withSockJS();
     }
 }

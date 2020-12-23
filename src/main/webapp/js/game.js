@@ -1,3 +1,22 @@
+var gameSocket = new SockJS('/secured/game');
+var gameStompClient = Stomp.over(gameSocket);
+var gameSessionId = "";
+
+gameStompClient.connect({}, function (frame) {
+    var url = gameStompClient.ws._transport.url;
+    url = url.replace(
+        "ws://localhost:8080/secured/game/",  "");
+    url = url.replace("/websocket", "");
+    url = url.replace(/^[0-9]+\//, "");
+    gameSessionId = url;
+
+    gameStompClient.subscribe('/secured/notification/queue/specific-user'
+        + '-user' + gameSessionId, function (msgOut) {
+        console.log(msgOut);
+    });
+
+});
+
 const offset = 20;
 const fieldSize = 40;
 const playerEnum = {"empty":0, "white":1, "black":2};
@@ -152,8 +171,8 @@ function checkWin(x, y, player) {
         sy = 0;
     } else {
         var sum = x + y;
-        sx = board.length;
-        sy = sum - board.length;
+        sx = board.length - 1;
+        sy = sum - sx;
     }
 
     while (sx >= 0 && sy < board[0].length) {

@@ -13,7 +13,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-public class MessageController {
+public class FriendsNotificationMessageController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final FriendsService friendsService;

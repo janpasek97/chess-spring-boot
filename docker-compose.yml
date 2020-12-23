@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+    pg:
+        image: "postgres"
+        ports:
+            - "5432:5432"
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_USER=fiveinarow
+            - PGDATA=/var/lib/postgresql/data/fiveinarowdata
+    red:
+        image: "redis" 
+        command: "redis-server"
+        ports:
+            - "6379:6379"
+        volumes:
+            - "redisdata:/data"
+    pga:
+        image: "dpage/pgadmin4"
+        ports:
+            - "80:80"
+        volumes:
+            - "pgadmindata:/var/lib/pgadmin"
+        environment:
+            - PGADMIN_DEFAULT_EMAIL=admin@domain.com
+            - PGADMIN_DEFAULT_PASSWORD=passwd
+
+volumes:
+    pgdata: {}
+    redisdata: {}
+    pgadmindata: {}

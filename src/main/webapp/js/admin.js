@@ -35,6 +35,7 @@ function saveDetails() {
             if(data.success) {
                 $("#saveErrorAlert").attr("hidden", "hidden");
                 $("#saveOkAlert").removeAttr("hidden");
+                loadUsersFromUrl("/users/all", currentPage, usersPerPage);
             } else {
                 $("#saveErrorAlert").removeAttr("hidden");
                 $("#saveOkAlert").attr("hidden", "hidden");

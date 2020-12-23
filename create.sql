@@ -1,5 +1,6 @@
 create sequence hibernate_sequence start 1 increment 1;
 create table friends_list (from_user_fk int8 not null, to_user_fk int8 not null);
+create table results (id int8 not null, timestamp timestamp, loser_id int8 not null, winner_id int8 not null, primary key (id));
 create table user_has_role (user_id int8 not null, role_id int8 not null);
 create table user_roles (id int8 not null, name varchar(255), primary key (id));
 create table users (id int8 not null, email varchar(50) not null, enabled boolean default true, password varchar(60) not null, username varchar(20) not null, primary key (id));
@@ -8,3 +9,5 @@ alter table if exists friends_list add constraint FKlpe7vtl0nr72fr4nhay212gnp fo
 alter table if exists friends_list add constraint FKn2re7of3qnj4most6u7s6ycaj foreign key (to_user_fk) references users on delete cascade;
 alter table if exists user_has_role add constraint FKefkclw8tuff3ijom687lro5gy foreign key (role_id) references user_roles on delete cascade;
 alter table if exists user_has_role add constraint FK2dl1ftxlkldulcp934i3125qo foreign key (user_id) references users on delete cascade;
+alter table if exists results add constraint FKb7ssve6wsdqcxl23kfe841tss foreign key (loser_id) references users on delete cascade;
+alter table if exists results add constraint FKeiyeb9y4efb3bmlun2le01n83 foreign key (winner_id) references users on delete cascade;
