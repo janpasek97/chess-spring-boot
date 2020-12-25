@@ -1,5 +1,7 @@
 package cz.pasekj.pia.fiveinarow.data.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.pasekj.pia.fiveinarow.game.PlayerColor;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -7,31 +9,22 @@ import java.io.Serializable;
 
 @RedisHash("Game")
 public class GameEntity implements Serializable {
-    private final String id;
-    private final String whitePlayer;
-    private final String blackPlayer;
-    private final int width;
-    private final int height;
+    private String id;
+    private String whitePlayer;
+    private String blackPlayer;
     private boolean isWin;
     private PlayerColor onMove;
-    private PlayerColor[][] board;
+    private String board;
 
-    public GameEntity(String id, String whitePlayer, String blackPlayer, int width, int height) {
+    public GameEntity() {}
+
+    public GameEntity(String id, String whitePlayer, String blackPlayer, String board) {
         this.id = id;
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.onMove = PlayerColor.WHITE;
         this.isWin = false;
-        this.width = width;
-        this.height = height;
-        this.board = new PlayerColor[width][height];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                board[i][j] = PlayerColor.EMPTY;
-            }
-        }
-
+        this.board = board;
     }
 
     public String getId() {
@@ -54,35 +47,61 @@ public class GameEntity implements Serializable {
         return isWin;
     }
 
+    public PlayerColor[][] getBoard() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            PlayerColor[][] boardTmp = objectMapper.readValue(board, PlayerColor[][].class);
+            return boardTmp;
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    public void setBoard(PlayerColor[][] gameBoard) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            this.board = objectMapper.writeValueAsString(gameBoard);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean performMove(String player, int x, int y) {
         if (isWin) return false;
+        PlayerColor[][] gameBoard = getBoard();
+        if(gameBoard == null) return false;
+        int width = gameBoard.length;
+        int height = gameBoard[0].length;
+
         PlayerColor playerColor;
         if(player.equals(whitePlayer)) playerColor = PlayerColor.WHITE;
         else playerColor = PlayerColor.BLACK;
 
         if (playerColor != onMove) return false;
         if (x < 0 || x >= width || y < 0 || y >= height) return false;
-        if(board[x][y] != PlayerColor.EMPTY) return false;
+        if(gameBoard[x][y] != PlayerColor.EMPTY) return false;
 
-        board[x][y] = onMove;
-        isWin = checkWin(x, y, playerColor);
+        gameBoard[x][y] = onMove;
+        isWin = checkWin(x, y, playerColor, gameBoard);
 
         if(!isWin) {
             onMove = onMove == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
         }
-
+        setBoard(gameBoard);
         return true;
     }
 
-    private boolean checkWin(int x, int y, PlayerColor playerColor) {
-        return checkLines(x, y, playerColor) || checkDiagonals(x, y, playerColor);
+    private boolean checkWin(int x, int y, PlayerColor playerColor, PlayerColor[][] gameBoard) {
+        return checkLines(x, y, playerColor, gameBoard) || checkDiagonals(x, y, playerColor, gameBoard);
     }
 
-    private boolean checkLines(int x, int y, PlayerColor playerColor) {
+    private boolean checkLines(int x, int y, PlayerColor playerColor, PlayerColor[][] gameBoard) {
+        int width = gameBoard.length;
+        int height = gameBoard[0].length;
         int cntr = 0;
         // Check horizontal
         for (int ix = 0; ix < width; ix++) {
-            if (board[ix][y] == playerColor) {
+            if (gameBoard[ix][y] == playerColor) {
                 cntr++;
                 if(cntr >= 5) return true;
             }
@@ -92,7 +111,7 @@ public class GameEntity implements Serializable {
         // Check vertical
         cntr = 0;
         for (int iy = 0; iy < height; iy++) {
-            if(board[x][iy] == playerColor) {
+            if(gameBoard[x][iy] == playerColor) {
                 cntr++;
                 if(cntr >= 5) return true;
             }
@@ -102,7 +121,9 @@ public class GameEntity implements Serializable {
         return false;
     }
 
-    private boolean checkDiagonals(int x, int y, PlayerColor playerColor) {
+    private boolean checkDiagonals(int x, int y, PlayerColor playerColor, PlayerColor[][] gameBoard) {
+        int width = gameBoard.length;
+        int height = gameBoard[0].length;
         // Check diagonal
         int dx;
         int dy;
@@ -116,7 +137,7 @@ public class GameEntity implements Serializable {
 
         int cntr = 0;
         while (dx < width && dy < height) {
-            if(board[dx][dy] == playerColor) {
+            if(gameBoard[dx][dy] == playerColor) {
                 cntr++;
                 if (cntr >= 5) return true;
             }
@@ -138,7 +159,7 @@ public class GameEntity implements Serializable {
 
         cntr = 0;
         while (ix >= 0 && iy < height) {
-            if(board[ix][iy] == playerColor) {
+            if(gameBoard[ix][iy] == playerColor) {
                 cntr++;
                 if(cntr >= 5) return true;
             }
