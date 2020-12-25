@@ -1,10 +1,12 @@
 package cz.pasekj.pia.fiveinarow.game.services.impl;
 
 import cz.pasekj.pia.fiveinarow.data.entity.GameEntity;
+import cz.pasekj.pia.fiveinarow.data.entity.UserEntity;
 import cz.pasekj.pia.fiveinarow.data.entity.UserInGameEntity;
 import cz.pasekj.pia.fiveinarow.data.repository.GameRepository;
 import cz.pasekj.pia.fiveinarow.data.repository.GameResultsRepository;
 import cz.pasekj.pia.fiveinarow.data.repository.UserInGameRepository;
+import cz.pasekj.pia.fiveinarow.data.repository.UserRepository;
 import cz.pasekj.pia.fiveinarow.game.PlayerColor;
 import cz.pasekj.pia.fiveinarow.game.services.InGameHandlerService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +23,20 @@ public class InGameHandlerServiceImpl implements InGameHandlerService {
     private final GameRepository gameRepository;
     private final UserInGameRepository userInGameRepository;
     private final GameResultsRepository gameResultsRepository;
+    private final UserRepository userRepository;
 
     @Override
     public String getInGame(String playerEmail) {
         Optional<UserInGameEntity> userInGameEntityOptional = userInGameRepository.findById(playerEmail);
         if (userInGameEntityOptional.isEmpty()) return null;
         return userInGameEntityOptional.get().getGameId();
+    }
+
+    @Override
+    public boolean isInGame(String username) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) return false;
+        else return getInGame(user.getEmail()) != null;
     }
 
     @Override

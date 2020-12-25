@@ -5,6 +5,7 @@ import cz.pasekj.pia.fiveinarow.game.PlayerColor;
 
 public interface InGameHandlerService {
     String getInGame(String playerEmail);
+    boolean isInGame(String username);
     String getCompetitor(String gameId, String playerEmail);
     boolean performMove(String gameId, String playerEmail, int x, int y);
     PlayerColor[][] getBoard(String gameId);
