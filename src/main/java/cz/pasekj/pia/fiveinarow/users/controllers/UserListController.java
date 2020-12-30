@@ -1,5 +1,6 @@
 package cz.pasekj.pia.fiveinarow.users.controllers;
 
+import cz.pasekj.pia.fiveinarow.game.services.InGameHandlerService;
 import cz.pasekj.pia.fiveinarow.support.PaginatedResultsRetrievedEvent;
 import cz.pasekj.pia.fiveinarow.support.ResourceNotFoundException;
 import cz.pasekj.pia.fiveinarow.users.UserInfo;
@@ -30,6 +31,7 @@ public class UserListController {
     private final UserInfoService userInfoService;
     private final AllUsersService allUsersService;
     private final FriendsService friendsService;
+    private final InGameHandlerService inGameService;
 
     @GetMapping(value = "/users/all", params = {"page", "size"})
     List<UserInfo> getAllUsers(@RequestParam("page") int page,
@@ -41,6 +43,7 @@ public class UserListController {
         Page<UserInfo> users = allUsersService.getAllUsers(PageRequest.of(page, size), currentUsername);
         users.getContent().forEach(userInfo -> {
             userInfo.friend = friendsService.areFriends(currentUsername, userInfo.username);
+            userInfo.inGame = inGameService.isInGame(userInfo.username);
         });
 
         if(page > users.getTotalPages()) {
@@ -69,6 +72,7 @@ public class UserListController {
         Page<UserInfo> onlineUsers = onlineUsersService.getLoggedInUsers(PageRequest.of(page, size), currentUsername);
         onlineUsers.getContent().forEach(userInfo -> {
             userInfo.friend = friendsService.areFriends(currentUsername, userInfo.username);
+            userInfo.inGame = inGameService.isInGame(userInfo.username);
         });
 
         if (page > onlineUsers.getTotalPages()) {
@@ -94,6 +98,9 @@ public class UserListController {
         String currentUsername = userInfoService.getCurrentUserName();
 
         Page<UserInfo> users = friendsService.getFriendsOf(currentUsername, PageRequest.of(page, size));
+        users.getContent().forEach(userInfo -> {
+            userInfo.inGame = inGameService.isInGame(userInfo.username);
+        });
         if(page > users.getTotalPages()) {
             throw new ResourceNotFoundException("Page access out of range");
         }

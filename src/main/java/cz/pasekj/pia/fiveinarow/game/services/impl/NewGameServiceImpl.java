@@ -29,7 +29,7 @@ public class NewGameServiceImpl implements NewGameService {
     private final UserInGameRepository userInGameRepository;
 
     @Override
-    public void createGame(String username1, String username2) {
+    public void createGame(String username1, String username2, int width, int height) {
         UUID newGameUUID = UUID.randomUUID();
         UserEntity user1 = userRepository.findByUsername(username1);
         UserEntity user2 = userRepository.findByUsername(username2);
@@ -47,8 +47,6 @@ public class NewGameServiceImpl implements NewGameService {
             blackPlayer = user1.getEmail();
         }
 
-        int width = 16;
-        int height = 16;
         PlayerColor[][] board = new PlayerColor[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {

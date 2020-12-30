@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class GameMessage {
     private GameMessageAction action = null;
+    private String opponent = "";
     private PlayerColor playerColor = null;
     private PlayerColor playerOnMove = null;
     private int x = 0;
@@ -20,14 +21,22 @@ public class GameMessage {
         this.y = y;
     }
 
-    public GameMessage(GameMessageAction action, PlayerColor playerColor, PlayerColor playerOnMove, PlayerColor[][] board) {
+    public GameMessage(GameMessageAction action, String opponent, PlayerColor playerColor, PlayerColor playerOnMove, PlayerColor[][] board) {
         this.action = action;
+        this.opponent = opponent;
         this.playerOnMove = playerOnMove;
         this.playerColor = playerColor;
         this.board = board;
     }
 
+    public GameMessage(GameMessageAction action, String opponent, int x, int y) {
+        this.action = action;
+        this.opponent = opponent;
+        this.x = x;
+        this.y = y;
+    }
+
     public enum GameMessageAction {
-        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA
+        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT
     }
 }

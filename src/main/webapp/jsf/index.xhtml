@@ -72,6 +72,39 @@
             </div>
         </div>
 
+        <div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newGameModalLabel">Start new game against <b id="newOpponentName"> </b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&#215;</span>
+                        </button>
+                    </div>
+                    <div id="newGameModalContent" class="modal-body">
+                        <p><b>Board size:</b></p>
+                        <div class="d-flex justify-content-center">
+                            <form class="form-inline">
+                                <input type="hidden" id="newGameOpponent"/>
+
+                                <label class="sr-only" for="newGameWidth">Width:</label>
+                                <input type="number" value="16" class="form-control mb-2" id="newGameWidth" placeholder="Width" min="4" max="32"/>
+                                <small class="text-muted ml-2 mr-2 mb-auto mt-auto">
+                                    x
+                                </small>
+                                <label class="sr-only" for="newGameHeight">Height</label>
+                                <input type="number" value="16" class="form-control mb-2" id="newGameHeight" placeholder="Height" min="4" max="32"/>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="startGameBtn" class="btn btn-primary" data-dismiss="modal" onclick="askGame()">Start</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </ui:define>
 
     <ui:define name="script">

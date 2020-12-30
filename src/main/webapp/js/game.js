@@ -19,6 +19,13 @@ gameStompClient.connect({}, function (frame) {
     initGame();
 });
 
+async function reload(time = 500) {
+    if (time > 0) {
+        await sleep(time);
+    }
+    location.reload();
+}
+
 const offset = 20;
 const fieldSize = 40;
 const playerEnum = {"EMPTY":0, "WHITE":1, "BLACK":2};
@@ -26,10 +33,14 @@ var turn = playerEnum.EMPTY;
 var myColor = playerEnum.EMPTY;
 var board = []
 
+var requestFrom;
+var requestWidth;
+var requestHeight;
+
 function handleMessage(message) {
     if(message.action === "COUNTER_MOVE") {
-        draw(msgParsed.x, msgParsed.y, playerEnum[msgParsed.playerColor]);
-        checkWin(msgParsed.x, msgParsed.y, turn);
+        draw(message.x, message.y, playerEnum[msgParsed.playerColor]);
+        checkWin(message.x, message.y, turn);
         turn = (playerEnum[msgParsed.playerColor] === playerEnum.WHITE) ? playerEnum.BLACK : playerEnum.WHITE;
         changeTurnImage();
     }
@@ -43,11 +54,49 @@ function handleMessage(message) {
         } else {
             $("#youPicture").attr("src", "/img/black_player.png");
         }
+        $('#opponentName').html(message.opponent);
         var boardWidth = message.board.length;
         var boardHeight = message.board[0].length;
         drawBoard(message.board, boardWidth, boardHeight);
+    } else if (message.action === "START"){
+        requestFrom = message.opponent;
+        requestWidth = message.x;
+        requestHeight = message.y;
 
+        $("#gameRequestWidth").html(message.x);
+        $("#gameRequestHeight").html(message.y);
+        $("#gameRequestFrom").html(message.opponent);
+        $("#gameRequestModal").modal("show");
+    } else if (message.action === "ACCEPT") {
+        reload(500);
     }
+}
+
+function acceptGame(){
+    stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
+        {
+            "action":"ACCEPT",
+            "opponent": requestFrom,
+            "playerOnMove": null,
+            "playerColor": null,
+            "x": requestWidth,
+            "y": requestHeight,
+            "board": null
+        }));
+    reload(500);
+}
+
+function newGame(user, opponent, width, height) {
+    stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
+        {
+            "action":"START",
+            "opponent": opponent,
+            "playerOnMove": null,
+            "playerColor": null,
+            "x": width,
+            "y": height,
+            "board": null
+        }));
 }
 
 function drawBoard(initBoard, width=16, height=16) {
@@ -86,6 +135,7 @@ function initGame() {
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {
             "action":"CONNECT",
+            "opponent": "",
             "playerOnMove": null,
             "playerColor": null,
             "x": 0,
@@ -113,6 +163,7 @@ function onCanvasClick(e) {
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {
             "action":"MOVE",
+            "opponent": "",
             "playerColor":colorName,
             "playerOnMove": null,
             "x": x,

@@ -35,6 +35,40 @@ public class GameMessageController {
         String from = user.getName();
         String fromEmail = userRepository.findByUsername(from).getEmail();
 
+        // Handle pre-game messages
+        if(msg.getAction() == GameMessage.GameMessageAction.START
+        || msg.getAction() == GameMessage.GameMessageAction.ACCEPT) {
+            String to = msg.getOpponent();
+            String toEmail = userRepository.findByUsername(to).getEmail();
+
+            switch (msg.getAction()) {
+                case START:
+                    if (inGameHandlerService.getInGame(toEmail) != null) return;
+
+                    GameMessage outputMessage = new GameMessage(
+                            GameMessage.GameMessageAction.START,
+                            from,
+                            msg.getX(),
+                            msg.getY()
+                    );
+                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", outputMessage);
+                    break;
+                case ACCEPT:
+                    newGameService.createGame(from, to, msg.getX(), msg.getY());
+                    GameMessage acceptMessage = new GameMessage(
+                            GameMessage.GameMessageAction.ACCEPT,
+                            from,
+                            msg.getX(),
+                            msg.getY()
+                    );
+                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", acceptMessage);
+                    break;
+            }
+
+            return;
+        }
+
+        // Handle in game messages
         String gameID = inGameHandlerService.getInGame(fromEmail);
         if(gameID == null) return;
 
@@ -58,6 +92,7 @@ public class GameMessageController {
                 PlayerColor playerColor = fromEmail.equals(inGameHandlerService.getWhitePlayerEmail(gameID)) ? PlayerColor.WHITE : PlayerColor.BLACK;
                 GameMessage outputMessage = new GameMessage(
                         GameMessage.GameMessageAction.CONNECT_DATA,
+                        userTo.getUsername(),
                         playerColor,
                         inGameHandlerService.getPlayerOnMove(gameID),
                         inGameHandlerService.getBoard(gameID)

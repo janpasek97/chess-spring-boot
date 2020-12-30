@@ -20,10 +20,6 @@ async function refresh(time = 500) {
     loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage);
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function navOnlineActive() {
     currentPage = 0;
     navAll.removeClass("active");
@@ -62,16 +58,20 @@ function loadUsersFromUrl(url, page, size) {
             var svg = multiavatar(item.username);
             var username = item.username;
             var online = item.online;
+            var inGame = item.inGame;
             var friends = item.friend;
             var userInfo= '';
             userInfo = '<div class="row user-item">';
             userInfo += '<div class="col-1 user-avatar">' + svg + '</div>';
-            userInfo += '<div class="col-2" style="margin-top: auto; margin-bottom: auto;">';
+            userInfo += '<div class="col-6" style="margin-top: auto; margin-bottom: auto;">';
             userInfo += username;
             if(online) {
                 userInfo += '<img src="/img/online_dot.png" class="ml-2" width="15px" height="15px" alt="connection status"/>';
             } else {
                 userInfo += '<img src="/img/offline_dot.png" class="ml-2" width="15px" height="15px" alt="connection status"/>'
+            }
+            if(inGame) {
+                userInfo += '<span class="badge badge-light ml-2">In game</span>';
             }
             userInfo += '</div>'
             userInfo += '<div class="col-2 ml-auto">';
@@ -80,8 +80,8 @@ function loadUsersFromUrl(url, page, size) {
             } else {
                 userInfo += '<span><button class="btn btn-warning" onclick="" data-toggle="modal" data-target="#removeFriendModal" data-whatever="' + username + '"><img src="/img/remove-friend.png" width="20px" class="btn-img"/></button></span>';
             }
-            if(online) {
-                userInfo += '<span><button class="btn btn-success ml-2"><img src="/img/play.png" width="20px" class="btn-img"/></button></span>';
+            if(online && !inGame) {
+                userInfo += '<span><button class="btn btn-success ml-2" onclick="startGame(\''+ username +'\')"><img src="/img/play.png" width="20px" class="btn-img"/></button></span>';
             } else {
                 userInfo += '<span><button class="btn btn-success ml-2" disabled><img src="/img/play.png" width="20px" class="btn-img"/></button></span>';
             }
@@ -96,4 +96,18 @@ function loadUsersFromUrl(url, page, size) {
         console.log("error", data.status);
         console.log("STATUS: "+xhr);
     });
+}
+
+function startGame(username){
+    $("#newGameOpponent").val(username);
+    $("#newOpponentName").html(username);
+    $("#newGameModal").modal("show");
+}
+
+function askGame(){
+    var currentUser = $("#usernameHidden").val();
+    var opponent = $("#newGameOpponent").val();
+    var width = $("#newGameWidth").val();
+    var height = $("#newGameHeight").val();
+    newGame(currentUser, opponent, width, height);
 }

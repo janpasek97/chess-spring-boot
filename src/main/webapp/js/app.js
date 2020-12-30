@@ -1,3 +1,7 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function getHeaders() {
     var headers = Array();
     headers[_csrfHeaderName] = _csrfToken;
