@@ -44,6 +44,12 @@ public class UserEntity {
     )
     private List<RoleEntity> roles;
 
+    @OneToMany(mappedBy = "winner")
+    private List<GameResultEntity> winnings;
+
+    @OneToMany(mappedBy = "loser")
+    private List<GameResultEntity> losses;
+
     public UserEntity() { }
 
     public UserEntity(String username, String email, String password, boolean enabled) {
@@ -79,6 +85,14 @@ public class UserEntity {
 
     public List<RoleEntity> getRoles() {
         return roles;
+    }
+
+    public List<GameResultEntity> getWinnings() {
+        return winnings;
+    }
+
+    public List<GameResultEntity> getLosses() {
+        return losses;
     }
 
     public void setUsername(String username) {

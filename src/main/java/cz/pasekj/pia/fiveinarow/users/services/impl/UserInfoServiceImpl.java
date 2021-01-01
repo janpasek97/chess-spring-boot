@@ -22,6 +22,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final UserRepository userRepository;
 
     @Override
+    public UserEntity getCurrentUser() {
+        return userRepository.findByUsername(getCurrentUserName());
+    }
+
+    @Override
     public String getCurrentUserName() {
         Object currentUserPrincipal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentUsername;

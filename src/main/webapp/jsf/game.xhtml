@@ -28,7 +28,8 @@
                                 </div>
                                 <div class="row align-content-center">
                                     <div class="col-auto mr-auto ml-auto">
-                                        <canvas id="board" width="820" height="640" onclick="onCanvasClick(event)"/>
+                                        <img id="boardLoading" src="/img/loading.svg" alt="Loading circle"/>
+                                        <canvas id="board" style="display: none" width="820" height="640" onclick="onCanvasClick(event)"/>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +70,9 @@
         <script type="text/javascript" src="/js/multiavatar.min.js"></script>
         <script type="text/javascript">
             jQuery(document).ready(function ($) {
-``
+                setTimeout(function () {
+                    initGame();
+                }, 700);
             });
         </script>
     </ui:define>

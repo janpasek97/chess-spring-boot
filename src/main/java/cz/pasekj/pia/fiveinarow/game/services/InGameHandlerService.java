@@ -12,6 +12,6 @@ public interface InGameHandlerService {
     PlayerColor getPlayerOnMove(String gameId);
     String getWhitePlayerEmail(String gameId);
     String getBlackPlayerEmail(String gameId);
-    boolean isWin(String gameId);
+    PlayerColor getWin(String gameId);
     void terminateGame(String gameId);
 }

@@ -2,7 +2,6 @@ package cz.pasekj.pia.fiveinarow.game.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import cz.pasekj.pia.fiveinarow.data.entity.GameEntity;
 import cz.pasekj.pia.fiveinarow.data.entity.UserEntity;
 import cz.pasekj.pia.fiveinarow.data.entity.UserInGameEntity;
@@ -15,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import javax.management.RuntimeErrorException;
-import java.io.*;
 import java.util.UUID;
 
 @Service
@@ -24,12 +21,16 @@ import java.util.UUID;
 @PreAuthorize("isAuthenticated()")
 public class NewGameServiceImpl implements NewGameService {
 
+    private final int MIN_BOARD_SIZE = 5;
+    private final int MAX_BOARD_SIZE = 32;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final UserInGameRepository userInGameRepository;
 
     @Override
     public void createGame(String username1, String username2, int width, int height) {
+        if(width < MIN_BOARD_SIZE || height < MIN_BOARD_SIZE || width > MAX_BOARD_SIZE || height > MAX_BOARD_SIZE) return;
+
         UUID newGameUUID = UUID.randomUUID();
         UserEntity user1 = userRepository.findByUsername(username1);
         UserEntity user2 = userRepository.findByUsername(username2);
@@ -56,7 +57,7 @@ public class NewGameServiceImpl implements NewGameService {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        GameEntity newGame = null;
+        GameEntity newGame;
         try {
             newGame = new GameEntity(
                     newGameUUID.toString(),

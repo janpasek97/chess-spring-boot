@@ -36,7 +36,11 @@ public class GameMessage {
         this.y = y;
     }
 
+    public GameMessage(GameMessageAction action) {
+        this.action = action;
+    }
+
     public enum GameMessageAction {
-        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT
+        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT, WIN, LOSE
     }
 }

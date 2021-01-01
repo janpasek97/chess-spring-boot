@@ -25,4 +25,22 @@ public class GameResultEntity {
     @JoinColumn(name = "loser_id", nullable = false)
     private UserEntity loser;
 
+    public GameResultEntity(){};
+
+    public GameResultEntity(UserEntity winner, UserEntity loser) {
+        this.winner = winner;
+        this.loser = loser;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public UserEntity getWinner() {
+        return winner;
+    }
+
+    public UserEntity getLoser() {
+        return loser;
+    }
 }

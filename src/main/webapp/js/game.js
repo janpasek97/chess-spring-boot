@@ -1,6 +1,7 @@
 var gameSocket = new SockJS('/secured/game');
 var gameStompClient = Stomp.over(gameSocket);
 var gameSessionId = "";
+var initialized = false;
 
 gameStompClient.connect({}, function (frame) {
     var url = gameStompClient.ws._transport.url;
@@ -40,11 +41,11 @@ var requestHeight;
 function handleMessage(message) {
     if(message.action === "COUNTER_MOVE") {
         draw(message.x, message.y, playerEnum[msgParsed.playerColor]);
-        checkWin(message.x, message.y, turn);
         turn = (playerEnum[msgParsed.playerColor] === playerEnum.WHITE) ? playerEnum.BLACK : playerEnum.WHITE;
         changeTurnImage();
     }
     else if(message.action === "CONNECT_DATA"){
+        initialized = true;
         turn = playerEnum[message.playerOnMove];
         changeTurnImage();
 
@@ -69,6 +70,10 @@ function handleMessage(message) {
         $("#gameRequestModal").modal("show");
     } else if (message.action === "ACCEPT") {
         reload(500);
+    } else if (message.action === "WIN") {
+        onWin();
+    } else if (message.action === "LOSE") {
+        onLose();
     }
 }
 
@@ -100,6 +105,9 @@ function newGame(user, opponent, width, height) {
 }
 
 function drawBoard(initBoard, width=16, height=16) {
+    $("#boardLoading").hide();
+    $("#board").show();
+
     var canvas = document.getElementById("board");
     var context = canvas.getContext('2d');
 
@@ -132,6 +140,7 @@ function drawBoard(initBoard, width=16, height=16) {
 }
 
 function initGame() {
+    if(initialized === true) return;
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {
             "action":"CONNECT",
@@ -171,7 +180,6 @@ function onCanvasClick(e) {
             "board": null
         }));
 
-    checkWin(x, y, turn);
     turn = (turn === playerEnum.WHITE) ? playerEnum.BLACK : playerEnum.WHITE;
     changeTurnImage();
 }
@@ -210,98 +218,12 @@ function draw(x, y, turn) {
     context.fill();
 }
 
-function onWin(player) {
-    if(player === playerEnum.WHITE) {
-        window.alert("White player win!");
-    } else {
-        window.alert("Black player win!");
-    }
+function onLose() {
+    window.alert("You lost the game :-(");
+    window.location = "/";
 }
 
-function checkWin(x, y, player) {
-    // check horizontal
-    var cntr = 0;
-    for (var ix=0; ix < board.length; ix++) {
-        if (board[ix][y] === player) {
-            cntr++;
-            if(cntr >= 5) {
-                onWin(player);
-                return;
-            }
-        }
-        else {
-            cntr = 0;
-        }
-    }
-
-    // check vertical
-    cntr = 0;
-    for (var iy=0; iy < board[0].length; iy++) {
-        if (board[x][iy] === player) {
-            cntr++;
-            if(cntr >= 5) {
-                onWin(player);
-                return;
-            }
-        }
-        else {
-            cntr = 0;
-        }
-    }
-
-    // check diagonal
-    cntr = 0;
-    var sx;
-    var sy;
-    if(x >= y) {
-        sx = x - y;
-        sy = 0;
-
-    } else {
-        sx = 0;
-        sy = y - x;
-    }
-
-    while (sx < board.length && sy < board[0].length) {
-
-        if(board[sx][sy] === player) {
-            cntr++;
-            if (cntr >= 5) {
-                onWin(player);
-                return;
-            }
-        } else {
-            cntr = 0;
-        }
-
-        sx++;
-        sy++;
-    }
-
-    // check inversed diagonal
-    cntr = 0;
-    if(x + y < board.length) {
-        sx = x + y;
-        sy = 0;
-    } else {
-        var sum = x + y;
-        sx = board.length - 1;
-        sy = sum - sx;
-    }
-
-    while (sx >= 0 && sy < board[0].length) {
-
-        if(board[sx][sy] === player) {
-            cntr++;
-            if(cntr >= 5) {
-                onWin(player);
-                return;
-            }
-        } else {
-            cntr = 0;
-        }
-
-        sx--;
-        sy++;
-    }
+function onWin() {
+    window.alert("You won the game :-)");
+    window.location = "/";
 }

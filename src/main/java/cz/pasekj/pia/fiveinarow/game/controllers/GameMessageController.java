@@ -6,6 +6,7 @@ import cz.pasekj.pia.fiveinarow.data.repository.UserInGameRepository;
 import cz.pasekj.pia.fiveinarow.data.repository.UserRepository;
 import cz.pasekj.pia.fiveinarow.game.GameMessage;
 import cz.pasekj.pia.fiveinarow.game.PlayerColor;
+import cz.pasekj.pia.fiveinarow.game.services.EndGameService;
 import cz.pasekj.pia.fiveinarow.game.services.InGameHandlerService;
 import cz.pasekj.pia.fiveinarow.game.services.NewGameService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class GameMessageController {
     private final UserInGameRepository userInGameRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final InGameHandlerService inGameHandlerService;
+    private final EndGameService endGameService;
     private final NewGameService newGameService;
 
     @MessageMapping("/secured/game")
@@ -76,6 +78,7 @@ public class GameMessageController {
         UserEntity userTo = userRepository.findByEmail(toEmail);
         if(userTo == null) return;
 
+        PlayerColor playerColor = fromEmail.equals(inGameHandlerService.getWhitePlayerEmail(gameID)) ? PlayerColor.WHITE : PlayerColor.BLACK;
 
         switch (msg.getAction()) {
             case MOVE:
@@ -86,10 +89,23 @@ public class GameMessageController {
                             msg.getX(),
                             msg.getY());
                     simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", outputMessage);
+                    PlayerColor winner = inGameHandlerService.getWin(gameID);
+                    if (winner != null) {
+                        endGameService.finishGame(gameID);
+                        GameMessage winMessage = new GameMessage(GameMessage.GameMessageAction.WIN);
+                        GameMessage loseMessage = new GameMessage(GameMessage.GameMessageAction.LOSE);
+                        if(winner == playerColor) {
+                            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", winMessage);
+                            simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", loseMessage);
+                        } else {
+                            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", loseMessage);
+                            simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", winMessage);
+                        }
+                    }
+
                 }
                 break;
             case CONNECT:
-                PlayerColor playerColor = fromEmail.equals(inGameHandlerService.getWhitePlayerEmail(gameID)) ? PlayerColor.WHITE : PlayerColor.BLACK;
                 GameMessage outputMessage = new GameMessage(
                         GameMessage.GameMessageAction.CONNECT_DATA,
                         userTo.getUsername(),

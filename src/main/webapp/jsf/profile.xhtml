@@ -58,32 +58,38 @@
                                 <h4 class="mt-5">Game history (last 10):</h4>
                                 <hr/>
                                 <ul class="list-group">
-                                    <li class="list-group-item list-group-item-success">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <img src="/img/win.png" class="mr-2" width="23px" height="23px" alt="win"/>
-                                                    WIN versus <b>martinpasek</b>
+                                    <ui:repeat value="#{gameResultsService.currentUserResults()}" var="result" varStatus="meta">
+                                        <h:outputText rendered="#{result.result == 'WIN' and meta.index le 9}">
+                                            <li class="list-group-item list-group-item-success">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <img src="/img/win.png" class="mr-2" width="23px" height="23px" alt="win"/>
+                                                            WIN versus <b>#{result.opponent}</b>
+                                                        </div>
+                                                        <div class="col-3 ml-auto">
+                                                            <i>#{result.timestamp}</i>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-3 ml-auto">
-                                                    <i>12:05 07/12/1997</i>
+                                            </li>
+                                        </h:outputText>
+                                        <h:outputText rendered="#{result.result == 'DEFEAT' and meta.index le 9}">
+                                            <li class="list-group-item list-group-item-warning">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <img src="/img/thumb-down.png" class="mr-2" width="23px" height="23px" alt="win"/>
+                                                        DEFEAT versus <b>#{result.opponent}</b>
+                                                    </div>
+                                                    <div class="col-3 ml-auto">
+                                                        <i>#{result.timestamp}</i>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item list-group-item-warning">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <img src="/img/thumb-down.png" class="mr-2" width="23px" height="23px" alt="win"/>
-                                                    DEFEAT versus <b>martinpasek</b>
-                                                </div>
-                                                <div class="col-3 ml-auto">
-                                                    <i>12:05 07/12/1997</i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                        </h:outputText>
+                                    </ui:repeat>
                                 </ul>
                             </div>
                         </div>

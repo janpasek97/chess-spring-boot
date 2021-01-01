@@ -43,8 +43,9 @@ public class GameEntity implements Serializable {
         return onMove;
     }
 
-    public boolean isWin() {
-        return isWin;
+    public PlayerColor getWin() {
+        if(!isWin) return null;
+        return onMove;
     }
 
     public PlayerColor[][] getBoard() {

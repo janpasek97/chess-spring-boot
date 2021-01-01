@@ -90,11 +90,11 @@ public class InGameHandlerServiceImpl implements InGameHandlerService {
     }
 
     @Override
-    public boolean isWin(String gameId) {
+    public PlayerColor getWin(String gameId) {
         Optional<GameEntity> gameEntityOptional = gameRepository.findById(gameId);
-        if(gameEntityOptional.isEmpty()) return false;
+        if(gameEntityOptional.isEmpty()) return null;
         GameEntity gameEntity =  gameEntityOptional.get();
-        return gameEntity.isWin();
+        return gameEntity.getWin();
     }
 
     @Override
