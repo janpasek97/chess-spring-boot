@@ -5,6 +5,8 @@ var currentPage = 0;
 var lastLoadURL = ""
 const usersPerPage = 4;
 
+setInterval(function(){loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage); console.log("now")}, 10000);
+
 $('#removeFriendModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var user = button.data('whatever');
