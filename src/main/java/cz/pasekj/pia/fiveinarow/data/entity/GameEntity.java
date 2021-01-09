@@ -15,6 +15,7 @@ public class GameEntity implements Serializable {
     private boolean isWin;
     private PlayerColor onMove;
     private String board;
+    private int emptyCnt;
 
     public GameEntity() {}
 
@@ -25,6 +26,11 @@ public class GameEntity implements Serializable {
         this.onMove = PlayerColor.WHITE;
         this.isWin = false;
         this.board = board;
+
+        PlayerColor[][] boardTmp = getBoard();
+        int width = boardTmp.length;
+        int height = boardTmp[0].length;
+        this.emptyCnt = width*height;
     }
 
     public String getId() {
@@ -48,11 +54,15 @@ public class GameEntity implements Serializable {
         return onMove;
     }
 
+    public void setSurrendered(PlayerColor winner) {
+        this.onMove = winner;
+        this.isWin = true;
+    }
+
     public PlayerColor[][] getBoard() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            PlayerColor[][] boardTmp = objectMapper.readValue(board, PlayerColor[][].class);
-            return boardTmp;
+            return objectMapper.readValue(board, PlayerColor[][].class);
         } catch (JsonProcessingException e) {
             return null;
         }
@@ -84,6 +94,11 @@ public class GameEntity implements Serializable {
 
         gameBoard[x][y] = onMove;
         isWin = checkWin(x, y, playerColor, gameBoard);
+
+        this.emptyCnt--;
+        if(this.emptyCnt <= 0) {
+            isWin = true;
+        }
 
         if(!isWin) {
             onMove = onMove == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;

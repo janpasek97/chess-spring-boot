@@ -20,16 +20,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class NewGameServiceImpl implements NewGameService {
-
-    private final int MIN_BOARD_SIZE = 5;
-    private final int MAX_BOARD_SIZE = 32;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final UserInGameRepository userInGameRepository;
 
     @Override
     public void createGame(String username1, String username2, int width, int height) {
-        if(width < MIN_BOARD_SIZE || height < MIN_BOARD_SIZE || width > MAX_BOARD_SIZE || height > MAX_BOARD_SIZE) return;
 
         UUID newGameUUID = UUID.randomUUID();
         UserEntity user1 = userRepository.findByUsername(username1);

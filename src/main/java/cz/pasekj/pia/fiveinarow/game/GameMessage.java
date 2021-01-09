@@ -42,6 +42,6 @@ public class GameMessage {
     }
 
     public enum GameMessageAction {
-        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT, WIN, LOSE, MESSAGE
+        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT, WIN, LOSE, MESSAGE, SURRENDER
     }
 }

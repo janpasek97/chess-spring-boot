@@ -35,7 +35,8 @@ public class GameMessageController {
                                   Principal user,
                                   @Header("simpSessionId") String sessionId) throws Exception {
         String from = user.getName();
-        String fromEmail = userRepository.findByUsername(from).getEmail();
+        UserEntity fromUser = userRepository.findByUsername(from);
+        String fromEmail = fromUser.getEmail();
 
         // Handle pre-game messages
         if(msg.getAction() == GameMessage.GameMessageAction.START
@@ -90,19 +91,10 @@ public class GameMessageController {
                             msg.getY());
                     simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", outputMessage);
                     PlayerColor winner = inGameHandlerService.getWin(gameID);
+                    String to = userTo.getUsername();
                     if (winner != null) {
-                        endGameService.finishGame(gameID);
-                        GameMessage winMessage = new GameMessage(GameMessage.GameMessageAction.WIN);
-                        GameMessage loseMessage = new GameMessage(GameMessage.GameMessageAction.LOSE);
-                        if(winner == playerColor) {
-                            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", winMessage);
-                            simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", loseMessage);
-                        } else {
-                            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", loseMessage);
-                            simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", winMessage);
-                        }
+                        handleWin(gameID, from, to, playerColor, winner);
                     }
-
                 }
                 break;
             case CONNECT:
@@ -118,6 +110,24 @@ public class GameMessageController {
             case MESSAGE:
                 simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", msg);
                 break;
+            case SURRENDER:
+                inGameHandlerService.surrender(gameID, fromEmail);
+                PlayerColor winner = inGameHandlerService.getWin(gameID);
+                handleWin(gameID, from, userTo.getUsername(), playerColor, winner);
+                break;
+        }
+    }
+
+    private void handleWin(String gameID, String from, String to, PlayerColor currentPlayerColor, PlayerColor winnerColor) {
+        endGameService.finishGame(gameID);
+        GameMessage winMessage = new GameMessage(GameMessage.GameMessageAction.WIN);
+        GameMessage loseMessage = new GameMessage(GameMessage.GameMessageAction.LOSE);
+        if(winnerColor == currentPlayerColor) {
+            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", winMessage);
+            simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", loseMessage);
+        } else {
+            simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", loseMessage);
+            simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", winMessage);
         }
     }
 

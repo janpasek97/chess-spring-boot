@@ -13,5 +13,5 @@ public interface InGameHandlerService {
     String getWhitePlayerEmail(String gameId);
     String getBlackPlayerEmail(String gameId);
     PlayerColor getWin(String gameId);
-    void terminateGame(String gameId);
+    void surrender(String gameId, String playerEmail);
 }

@@ -279,3 +279,17 @@ function messageSend() {
             "message": msg
         }));
 }
+
+function surrender() {
+    stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
+        {
+            "action":"SURRENDER",
+            "opponent": requestFrom,
+            "playerOnMove": null,
+            "playerColor": null,
+            "x": null,
+            "y": null,
+            "board": null,
+            "message": null
+        }));
+}

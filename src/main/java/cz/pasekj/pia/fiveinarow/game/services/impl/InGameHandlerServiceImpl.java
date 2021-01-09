@@ -98,7 +98,16 @@ public class InGameHandlerServiceImpl implements InGameHandlerService {
     }
 
     @Override
-    public void terminateGame(String gameId) {
+    public void surrender(String gameId, String playerEmail) {
+        Optional<GameEntity> gameEntityOptional = gameRepository.findById(gameId);
+        if(gameEntityOptional.isEmpty()) return;
 
+        GameEntity gameEntity =  gameEntityOptional.get();
+        if(gameEntity.getBlackPlayer().equals(playerEmail)){
+            gameEntity.setSurrendered(PlayerColor.WHITE);
+        } else {
+            gameEntity.setSurrendered(PlayerColor.BLACK);
+        }
+        gameRepository.save(gameEntity);
     }
 }

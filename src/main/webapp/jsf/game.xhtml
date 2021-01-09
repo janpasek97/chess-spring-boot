@@ -14,7 +14,7 @@
         <div class="container">
             <div class="card mt-4 border-light" style="border-width: 5px;">
                 <div class="card-header">
-                    <h3>Game vs <b id="opponentName"></b></h3>
+                    <h3 class="d-inline mr-auto">Game vs <b id="opponentName"></b></h3>
                 </div>
                 <div class="card-body" id="gameCard">
                     <div class="row justify-content-center">
@@ -24,6 +24,7 @@
                                     <div class="col-auto mr-auto ml-auto alert alert-secondary">
                                         You: <img id="youPicture" src="/img/black_player.png" width="20px" class="mr-5"/>
                                         Turn: <img id="turnPicture" src="/img/white_player.png" width="20px"/>
+                                        <span><a onclick="" data-toggle="modal" data-target="#surrenderGameModal" class="btn btn-warning ml-5">Surrender</a></span>
                                     </div>
                                 </div>
                                 <div class="row align-content-center">
@@ -65,21 +66,21 @@
             <!--      Toasts will live here      -->
         </div>
 
-        <div class="modal fade" id="removeFriendModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div class="modal fade" id="surrenderGameModal" tabindex="-1" role="dialog" aria-labelledby="surrenderGameModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="removeModalLabel">Remove friend?</h5>
+                        <h5 class="modal-title" id="surrenderGameModalLabel">Surrender game?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&#215;</span>
                         </button>
                     </div>
-                    <div id="removeFriendModalContent" class="modal-body">
-
+                    <div class="modal-body">
+                        Do you really want to surrender the game?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" id="removeFriendConfirmBtn" class="btn btn-danger" data-dismiss="modal" onclick="">Remove</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="surrender()">Surrender</button>
                     </div>
                 </div>
             </div>
