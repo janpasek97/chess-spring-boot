@@ -11,3 +11,5 @@ alter table if exists user_has_role add constraint FKefkclw8tuff3ijom687lro5gy f
 alter table if exists user_has_role add constraint FK2dl1ftxlkldulcp934i3125qo foreign key (user_id) references users on delete cascade;
 alter table if exists results add constraint FKb7ssve6wsdqcxl23kfe841tss foreign key (loser_id) references users on delete cascade;
 alter table if exists results add constraint FKeiyeb9y4efb3bmlun2le01n83 foreign key (winner_id) references users on delete cascade;
+create table password_reset_token (id int8 not null, expiry_date timestamp, token varchar(255), user_id int8 not null, primary key (id));
+alter table if exists password_reset_token add constraint FK83nsrttkwkb6ym0anu051mtxn foreign key (user_id) references users on delete cascade;

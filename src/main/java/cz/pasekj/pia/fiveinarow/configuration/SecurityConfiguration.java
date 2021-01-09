@@ -50,6 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/javax.faces.resource/**").permitAll()
                     .antMatchers(loginUrl).permitAll()
                     .antMatchers("/signup").permitAll()
+                    .antMatchers("/password/reset").permitAll()
+                    .antMatchers("/password/change").permitAll()
                     .antMatchers("/admin**").hasRole("ADMIN")
                     .anyRequest().authenticated())
             .formLogin()
