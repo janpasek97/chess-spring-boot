@@ -46,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/webjars/**").permitAll()
                     .antMatchers("/js/**").permitAll()
                     .antMatchers("/css/**").permitAll()
+                    .antMatchers("/wav/**").permitAll()
                     .antMatchers("/javax.faces.resource/**").permitAll()
                     .antMatchers(loginUrl).permitAll()
                     .antMatchers("/signup").permitAll()

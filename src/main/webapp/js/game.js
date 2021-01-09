@@ -74,6 +74,8 @@ function handleMessage(message) {
         onWin();
     } else if (message.action === "LOSE") {
         onLose();
+    } else if (message.action === "MESSAGE") {
+        messageReceived(message.message);
     }
 }
 
@@ -86,7 +88,8 @@ function acceptGame(){
             "playerColor": null,
             "x": requestWidth,
             "y": requestHeight,
-            "board": null
+            "board": null,
+            "message": null
         }));
     reload(500);
 }
@@ -100,7 +103,8 @@ function newGame(user, opponent, width, height) {
             "playerColor": null,
             "x": width,
             "y": height,
-            "board": null
+            "board": null,
+            "message": null
         }));
 }
 
@@ -149,7 +153,8 @@ function initGame() {
             "playerColor": null,
             "x": 0,
             "y": 0,
-            "board": null
+            "board": null,
+            "message": null
         }));
 }
 
@@ -177,7 +182,8 @@ function onCanvasClick(e) {
             "playerOnMove": null,
             "x": x,
             "y": y,
-            "board": null
+            "board": null,
+            "message": null
         }));
 
     turn = (turn === playerEnum.WHITE) ? playerEnum.BLACK : playerEnum.WHITE;
@@ -226,4 +232,50 @@ function onLose() {
 function onWin() {
     window.alert("You won the game :-)");
     window.location = "/";
+}
+
+function messageReceived(msg) {
+    $("#noMessage").hide();
+
+    var snd = new Audio("/wav/message.wav"); // buffers automatically when created
+    snd.play();
+
+    var msgElement = ""
+    msgElement += '<div class="message-box-holder">';
+    msgElement += '<div class="message-box message-partner">';
+    msgElement += msg;
+    msgElement += '</div>';
+    msgElement += '</div>';
+
+    $("#chatContainer").append(msgElement);
+    $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight);
+}
+
+function messageSend() {
+    $("#noMessage").hide();
+    var msg = $("#chatText").val();
+    if(msg === "") return;
+
+    $("#chatText").val("");
+    var msgElement = ""
+    msgElement += '<div class="message-box-holder">';
+    msgElement += '<div class="message-box">';
+    msgElement += msg;
+    msgElement += '</div>';
+    msgElement += '</div>';
+
+    $("#chatContainer").append(msgElement);
+    $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight);
+
+    stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
+        {
+            "action":"MESSAGE",
+            "opponent": requestFrom,
+            "playerOnMove": null,
+            "playerColor": null,
+            "x": null,
+            "y": null,
+            "board": null,
+            "message": msg
+        }));
 }

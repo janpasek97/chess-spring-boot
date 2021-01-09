@@ -115,6 +115,9 @@ public class GameMessageController {
                 );
                 simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", outputMessage);
                 break;
+            case MESSAGE:
+                simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", msg);
+                break;
         }
     }
 

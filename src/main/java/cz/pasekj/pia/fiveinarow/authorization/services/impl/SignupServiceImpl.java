@@ -71,4 +71,9 @@ public class SignupServiceImpl implements SignupService {
         }
         return !error;
     }
+
+    @Override
+    public boolean signupOAuth2(String username, String email) {
+        return false;
+    }
 }

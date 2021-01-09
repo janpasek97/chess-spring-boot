@@ -11,6 +11,7 @@ public class GameMessage {
     private int x = 0;
     private int y = 0;
     private PlayerColor[][] board = null;
+    private String message = "";
 
     public GameMessage() {}
 
@@ -41,6 +42,6 @@ public class GameMessage {
     }
 
     public enum GameMessageAction {
-        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT, WIN, LOSE
+        MOVE, COUNTER_MOVE, CONNECT, CONNECT_DATA, START, ACCEPT, WIN, LOSE, MESSAGE
     }
 }
