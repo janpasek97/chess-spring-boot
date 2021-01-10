@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row justify-content-center">
-                        <div class="col-10 p-4">
+                        <div class="col-lg-10 p-4">
                             <div class="container" id="profileContainer">
                                 <h4>User details:</h4>
                                 <hr/>
@@ -63,11 +63,11 @@
                                             <li class="list-group-item list-group-item-success">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-lg-6">
                                                             <img src="/img/win.png" class="mr-2" width="23px" height="23px" alt="win"/>
-                                                            WIN versus <b>#{result.opponent}</b>
+                                                            WIN versus <b><br class="d-md-none"/>#{result.opponent}</b>
                                                         </div>
-                                                        <div class="col-3 ml-auto">
+                                                        <div class="col-lg-3 ml-auto d-none d-md-inline">
                                                             <i>#{result.timestamp}</i>
                                                         </div>
                                                     </div>
@@ -78,11 +78,11 @@
                                             <li class="list-group-item list-group-item-warning">
                                             <div class="container">
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-lg-6">
                                                         <img src="/img/thumb-down.png" class="mr-2" width="23px" height="23px" alt="win"/>
-                                                        DEFEAT versus <b>#{result.opponent}</b>
+                                                        DEFEAT versus <b><br class="d-md-none"/>#{result.opponent}</b>
                                                     </div>
-                                                    <div class="col-3 ml-auto">
+                                                    <div class="col-lg-3 ml-auto d-none d-md-inline">
                                                         <i>#{result.timestamp}</i>
                                                     </div>
                                                 </div>

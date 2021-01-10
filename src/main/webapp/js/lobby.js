@@ -90,8 +90,8 @@ function loadUsersFromUrl(url, page, size) {
             var friends = item.friend;
             var userInfo= '';
             userInfo = '<div class="row user-item">';
-            userInfo += '<div class="col-1 user-avatar">' + svg + '</div>';
-            userInfo += '<div class="col-6" style="margin-top: auto; margin-bottom: auto;">';
+            userInfo += '<div class="col-lg-1 user-avatar d-none d-lg-block">' + svg + '</div>';
+            userInfo += '<div class="col-6 col-lg-6" style="margin-top: auto; margin-bottom: auto;">';
             userInfo += username;
             if(online) {
                 userInfo += '<img src="/img/online_dot.png" class="ml-2" width="15px" height="15px" alt="connection status"/>';
@@ -102,7 +102,7 @@ function loadUsersFromUrl(url, page, size) {
                 userInfo += '<span class="badge badge-light ml-2">In game</span>';
             }
             userInfo += '</div>'
-            userInfo += '<div class="col-2 ml-auto">';
+            userInfo += '<div class="col-6 col-md-3 col-lg-2 ml-auto">';
             if(!friends) {
                 userInfo += '<span><button class="btn btn-primary" onclick="addFriend(\'' + username + '\')"><img src="/img/add-friend.png" width="20px" class="btn-img"/></button></span>';
             } else {
