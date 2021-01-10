@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.util.HtmlUtils;
 
 import java.security.Principal;
 
@@ -92,6 +93,7 @@ public class GameMessageController {
                 simpMessagingTemplate.convertAndSendToUser(from, "/secured/notification/queue/specific-user", outputMessage);
                 break;
             case MESSAGE:
+                msg.setMessage(HtmlUtils.htmlEscape(msg.getMessage()));
                 simpMessagingTemplate.convertAndSendToUser(userTo.getUsername(), "/secured/notification/queue/specific-user", msg);
                 break;
             case SURRENDER:

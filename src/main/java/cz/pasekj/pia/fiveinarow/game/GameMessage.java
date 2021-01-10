@@ -83,6 +83,22 @@ public class GameMessage {
     }
 
     /**
+     * Get chat message
+     * @return message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Set chat message
+     * @param message message
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    /**
      * Message actions enumeration
      */
     public enum GameMessageAction {
