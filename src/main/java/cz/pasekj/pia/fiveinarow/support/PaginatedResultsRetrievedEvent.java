@@ -6,6 +6,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
+/**
+ * Paginated result event, used for creating header entry for pagination support
+ * - implementation from www.baeldung.com
+ * @param <T> event type
+ */
 public final class PaginatedResultsRetrievedEvent<T extends Serializable> extends ApplicationEvent {
     private final UriComponentsBuilder uriBuilder;
     private final HttpServletResponse response;

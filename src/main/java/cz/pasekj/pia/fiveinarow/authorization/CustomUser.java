@@ -10,6 +10,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Custom implementation of User that merges legacy user, OAuth2User and OidcUser together - unification of OAuth and legacy login
+ * implementation only uses super methods and the interface methods have dummy implementation
+ */
 public class CustomUser extends User implements OAuth2User, OidcUser {
 
     public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {

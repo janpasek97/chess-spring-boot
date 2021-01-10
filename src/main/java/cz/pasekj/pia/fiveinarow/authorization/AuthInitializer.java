@@ -17,14 +17,23 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.List;
 
+/**
+ * Initializer that runs after the application starts up and verify if all important roles and users are
+ * in the database
+ */
 @Component
 @Transactional
 @RequiredArgsConstructor
 public class AuthInitializer implements InitializingBean, WebApplicationInitializer {
+
+    /** UserEntity DAO */
     private final UserRepository userRepo;
+    /** RoleEntity DAO */
     private final RoleRepository roleRepo;
+    /** password encoder */
     private final PasswordEncoder encoder;
 
+    // default login configurations
     @Value("${defUsername}")
     private String adminUsername;
     @Value("${defPassword}")
@@ -36,6 +45,11 @@ public class AuthInitializer implements InitializingBean, WebApplicationInitiali
     @Value("${adminRole}")
     private String adminRoleName;
 
+    /**
+     * Checks if the Admin user is in the system and checks if all roles are in the database (USER and ADMIN)
+     * If something is missing it is automatically inserted into the database
+     * @throws Exception N/A
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         String[] necessaryRoles = {adminRoleName, userRoleName};

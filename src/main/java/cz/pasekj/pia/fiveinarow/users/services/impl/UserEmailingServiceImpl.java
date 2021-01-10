@@ -8,11 +8,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/**
+ * UserEmailingService implementation
+ */
 @Service("userEmailingService")
 @RequiredArgsConstructor
 public class UserEmailingServiceImpl implements UserEmailingService {
 
+    /** Mail sender service */
     private final JavaMailSender mailSender;
+    /** UserEntity DAO */
     private final UserRepository userRepository;
 
 

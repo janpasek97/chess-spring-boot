@@ -14,11 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserInfo service implementation
+ */
 @Service("currentUserService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class UserInfoServiceImpl implements UserInfoService {
 
+    /** UserEntity DAO */
     private final UserRepository userRepository;
 
     @Override

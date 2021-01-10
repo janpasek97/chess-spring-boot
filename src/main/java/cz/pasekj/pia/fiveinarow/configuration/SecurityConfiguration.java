@@ -23,6 +23,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
+/**
+ * Security configuration
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalAuthentication
@@ -31,15 +34,26 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @ComponentScan
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    /** login URL */
     @Value("${logInUrl}")
     private String loginUrl;
 
+    /** logout URL */
     @Value("${logOutUrl}")
     private String logoutUrl;
 
+    /** Custom OAuth2 user service */
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
+
+    /** Custom Oidc user service  */
     private final CustomOidcUserService customOidcUserService;
 
+    /**
+     * Configures legace login, Google, Facebook and Github OAuth2 login
+     *  -   all urls except login, registration and password recovery require login
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(auth -> auth
@@ -69,6 +83,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
     }
 
+    /** Session registry bean for collection online users */
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();

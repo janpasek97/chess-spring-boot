@@ -18,13 +18,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Online users service implemenetation
+ */
 @Service("activeUsersService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 @RequestScope
 public class OnlineUsersServiceImpl implements OnlineUsersService {
 
+    /** Session registry for getting online users */
     private final SessionRegistry sessionRegistry;
+
+    /** Set of logged in users -> serves as a cache */
     private Set<String> onlineUsers;
 
     @Override

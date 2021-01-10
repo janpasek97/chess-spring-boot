@@ -13,15 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller used for handling admin page requests
+ */
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
+    /** Admin service instance used to change user information */
     private final AdminService adminService;
 
+    /**
+     * Change user details based on Rest API request formatted in JSON
+     * @param jsString new user information in JSON format
+     * @return instance of AdminServiceResults with information about action result
+     */
     @PostMapping("/admin/api")
     AdminServiceResult changeUserDetails(@RequestBody String jsString) {
+        // parse the input data
         JSONObject jsonObject = new JSONObject(jsString);
         String username = jsonObject.getString("username");
         String email = jsonObject.getString("email");
@@ -36,6 +46,7 @@ public class AdminController {
 
         AdminServiceResult result;
 
+        // perform necessary changes
         result = adminService.changeUsername(email, username);
         if(!result.success) return result;
         result = adminService.changeRoles(email, roles);

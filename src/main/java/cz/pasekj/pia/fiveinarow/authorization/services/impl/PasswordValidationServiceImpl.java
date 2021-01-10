@@ -4,11 +4,25 @@ import cz.pasekj.pia.fiveinarow.authorization.services.PasswordValidationService
 import org.passay.*;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service used for password strength validation validation
+ * -    8-16 letters
+ * -    one upper case
+ * -    one lower case
+ * -    one digit
+ * -    one special
+ * -    basic illegal sequences are forbidden
+ * -    no whitespaces
+ */
 @Service("passwordValidationService")
 public class PasswordValidationServiceImpl implements PasswordValidationService {
 
+    /** PasswordValidator instance */
     private PasswordValidator validator;
 
+    /**
+     * Constructor - creates and configures the PasswordValidator
+     */
     public PasswordValidationServiceImpl() {
         validator = new PasswordValidator(
                 new LengthRule(8, 16),

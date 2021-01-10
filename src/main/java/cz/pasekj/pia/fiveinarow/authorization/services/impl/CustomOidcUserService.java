@@ -13,19 +13,25 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Oidc user details service that processes Facebook and Github login and possibly registers the user in the
+ * app database
+ */
 @Service("oidcUser")
 @RequiredArgsConstructor
 public class CustomOidcUserService extends OidcUserService {
 
+    /** name of the user role */
     @Value("${userRole}")
     private String userRoleName;
+    /** UserEntity DAO */
     private final UserRepository userRepository;
+    /** RoleEntity DAO */
     private final RoleRepository roleRepository;
 
     @Override
@@ -53,6 +59,14 @@ public class CustomOidcUserService extends OidcUserService {
         return user;
     }
 
+    /**
+     * Process login of a google user
+     * Check's whether the user already exists in the database. If not it stores it's information.
+     * In case of collision with legacy user and exception is thrown
+     * @param user logged in OidcUser
+     * @return resulting UserEntity
+     * @throws OAuth2AuthenticationException in case of login failure (eg. email collision)
+     */
     private UserEntity processGoogleUser(OidcUser user) throws OAuth2AuthenticationException{
         String name = user.getAttribute("name");
         String email = user.getEmail();

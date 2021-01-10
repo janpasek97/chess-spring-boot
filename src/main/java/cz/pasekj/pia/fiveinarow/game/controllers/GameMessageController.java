@@ -18,18 +18,31 @@ import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 
+/**
+ * Handler of WebSocket messages associated with gameplay
+ */
 @Controller
 @RequiredArgsConstructor
 public class GameMessageController {
-
+    /** UserEntity DAO */
     private final UserRepository userRepository;
-    private final GameRepository gameRepository;
-    private final UserInGameRepository userInGameRepository;
+    /** Messaging service for sending user-directed messages */
     private final SimpMessagingTemplate simpMessagingTemplate;
+    /** InGameHandler service */
     private final InGameHandlerService inGameHandlerService;
+    /** EndGame service */
     private final EndGameService endGameService;
+    /** NewGame service */
     private final NewGameService newGameService;
 
+    /**
+     * Handle incoming messages, resolves actions that must be done and send responses to
+     * correct users. It changes the game state via game services
+     * @param msg received message
+     * @param user user who sent the message
+     * @param sessionId session ID of the user who sent the message
+     * @throws Exception N/A
+     */
     @MessageMapping("/secured/game")
     public void handleGameMessage(@Payload GameMessage msg,
                                   Principal user,
@@ -39,37 +52,7 @@ public class GameMessageController {
         String fromEmail = fromUser.getEmail();
 
         // Handle pre-game messages
-        if(msg.getAction() == GameMessage.GameMessageAction.START
-        || msg.getAction() == GameMessage.GameMessageAction.ACCEPT) {
-            String to = msg.getOpponent();
-            String toEmail = userRepository.findByUsername(to).getEmail();
-
-            switch (msg.getAction()) {
-                case START:
-                    if (inGameHandlerService.getInGame(toEmail) != null) return;
-
-                    GameMessage outputMessage = new GameMessage(
-                            GameMessage.GameMessageAction.START,
-                            from,
-                            msg.getX(),
-                            msg.getY()
-                    );
-                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", outputMessage);
-                    break;
-                case ACCEPT:
-                    newGameService.createGame(from, to, msg.getX(), msg.getY());
-                    GameMessage acceptMessage = new GameMessage(
-                            GameMessage.GameMessageAction.ACCEPT,
-                            from,
-                            msg.getX(),
-                            msg.getY()
-                    );
-                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", acceptMessage);
-                    break;
-            }
-
-            return;
-        }
+        if (handlePreGame(msg, from)) return;
 
         // Handle in game messages
         String gameID = inGameHandlerService.getInGame(fromEmail);
@@ -81,6 +64,7 @@ public class GameMessageController {
 
         PlayerColor playerColor = fromEmail.equals(inGameHandlerService.getWhitePlayerEmail(gameID)) ? PlayerColor.WHITE : PlayerColor.BLACK;
 
+        // handle in game messages
         switch (msg.getAction()) {
             case MOVE:
                 if(inGameHandlerService.performMove(gameID, fromEmail, msg.getX(), msg.getY())) {
@@ -118,6 +102,55 @@ public class GameMessageController {
         }
     }
 
+    /**
+     * Handle pre-game action messages, that are used for creating a game
+     * @param msg received message
+     * @param from username of the message sender
+     * @return true = pre-game handled, false = pre-game not handled
+     */
+    private boolean handlePreGame(GameMessage msg, String from) {
+        if(msg.getAction() == GameMessage.GameMessageAction.START
+        || msg.getAction() == GameMessage.GameMessageAction.ACCEPT) {
+            String to = msg.getOpponent();
+            String toEmail = userRepository.findByUsername(to).getEmail();
+
+            switch (msg.getAction()) {
+                case START:
+                    if (inGameHandlerService.getInGame(toEmail) != null) return true;
+
+                    GameMessage outputMessage = new GameMessage(
+                            GameMessage.GameMessageAction.START,
+                            from,
+                            msg.getX(),
+                            msg.getY()
+                    );
+                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", outputMessage);
+                    break;
+                case ACCEPT:
+                    newGameService.createGame(from, to, msg.getX(), msg.getY());
+                    GameMessage acceptMessage = new GameMessage(
+                            GameMessage.GameMessageAction.ACCEPT,
+                            from,
+                            msg.getX(),
+                            msg.getY()
+                    );
+                    simpMessagingTemplate.convertAndSendToUser(to, "/secured/notification/queue/specific-user", acceptMessage);
+                    break;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle situation when a players wins
+     * @param gameID ID of the corresponding game
+     * @param from username of the player on move
+     * @param to username of the opponent
+     * @param currentPlayerColor current player color
+     * @param winnerColor color of the winner
+     */
     private void handleWin(String gameID, String from, String to, PlayerColor currentPlayerColor, PlayerColor winnerColor) {
         endGameService.finishGame(gameID);
         GameMessage winMessage = new GameMessage(GameMessage.GameMessageAction.WIN);

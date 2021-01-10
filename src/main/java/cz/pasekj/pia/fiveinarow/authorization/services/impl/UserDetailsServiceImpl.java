@@ -14,10 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of UserDetailsService for legacy login method
+ */
 @Service("userDetailsService")
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    /** UserEntity DAO */
     private final UserRepository userRepository;
 
     @Override

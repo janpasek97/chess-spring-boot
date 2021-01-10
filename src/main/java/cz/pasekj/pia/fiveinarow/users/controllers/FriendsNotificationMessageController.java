@@ -11,13 +11,25 @@ import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 
+/**
+ * WebSocket controller for friends notifications
+ */
 @Controller
 @RequiredArgsConstructor
 public class FriendsNotificationMessageController {
 
+    /** Messaging service used for sending user-directed messages */
     private final SimpMessagingTemplate simpMessagingTemplate;
+    /** Friends service */
     private final FriendsService friendsService;
 
+    /**
+     * Handle friend message using FriendsService and sendscorrespondingg messages to concerned
+     * @param msg
+     * @param user
+     * @param sessionId
+     * @throws Exception
+     */
     @MessageMapping("/secured/friends")
     public void handleFriendsMessage(@Payload FriendsMessage msg,
                                      Principal user,

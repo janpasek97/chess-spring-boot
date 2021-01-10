@@ -6,10 +6,14 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+/**
+ * WebSocket configuration
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketsConfiguration implements WebSocketMessageBrokerConfigurer {
 
+    /** MessageBroker config */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/secured/notification/queue/specific-user");
@@ -17,6 +21,7 @@ public class WebSocketsConfiguration implements WebSocketMessageBrokerConfigurer
         registry.setUserDestinationPrefix("/secured/notification");
     }
 
+    /** Registration of 2 application websockets endpoints */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/secured/friends");

@@ -16,12 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * AllUsers service implementation
+ */
 @Service("allUsersService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class AllUsersServiceImpl implements AllUsersService {
 
+    /** UserEntity DAO */
     private final UserRepository userRepository;
+    /** OnlineUsers service */
     private final OnlineUsersService onlineUsersService;
 
 

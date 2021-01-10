@@ -21,18 +21,39 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * Rest API controller for accessing lists of users
+ * - all
+ * - friends
+ * - online
+ */
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class UserListController {
 
+    /** Publisher of events - used for paginated results */
     private final ApplicationEventPublisher eventPublisher;
+    /** Online users service */
     private final OnlineUsersService onlineUsersService;
+    /** User info service */
     private final UserInfoService userInfoService;
+    /** All users service */
     private final AllUsersService allUsersService;
+    /** Friends service */
     private final FriendsService friendsService;
+    /** InGameHandler service */
     private final InGameHandlerService inGameService;
 
+    /**
+     * Controller for accessing list of all users
+     * Results in serialized JSON array of UserInfo
+     * @param page page number to be displayed
+     * @param size size of the page
+     * @param uriBuilder N/A
+     * @param response HTTP response
+     * @return Serialized list of UserInfo
+     */
     @GetMapping(value = "/users/all", params = {"page", "size"})
     List<UserInfo> getAllUsers(@RequestParam("page") int page,
                              @RequestParam("size") int size,
@@ -61,6 +82,15 @@ public class UserListController {
         return users.getContent();
     }
 
+    /**
+     * Controller for accessing list of online users
+     * Results in serialized JSON array of UserInfo
+     * @param page page number to be displayed
+     * @param size size of the page
+     * @param uriBuilder N/A
+     * @param response HTTP response
+     * @return Serialized list of UserInfo
+     */
     @GetMapping(value = "/users/online", params = {"page", "size"})
     List<UserInfo> getOnlineUsers(@RequestParam("page") int page,
                                   @RequestParam("size") int size,
@@ -89,6 +119,15 @@ public class UserListController {
         return onlineUsers.getContent();
     }
 
+    /**
+     * Controller for accessing list of friends of the current user
+     * Results in serialized JSON array of UserInfo
+     * @param page page number to be displayed
+     * @param size size of the page
+     * @param uriBuilder N/A
+     * @param response HTTP response
+     * @return Serialized list of UserInfo
+     */
     @GetMapping(value = "/users/friends", params = {"page", "size"})
     List<UserInfo> getFriendsList(@RequestParam("page") int page,
                                   @RequestParam("size") int size,

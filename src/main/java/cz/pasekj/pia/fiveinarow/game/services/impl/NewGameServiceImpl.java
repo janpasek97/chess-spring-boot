@@ -16,12 +16,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/**
+ * New game service implementation
+ */
 @Service
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class NewGameServiceImpl implements NewGameService {
+    /** UserEntity DAO */
     private final UserRepository userRepository;
+    /** GameEntity DAO */
     private final GameRepository gameRepository;
+    /** UserInGame DAO */
     private final UserInGameRepository userInGameRepository;
 
     @Override

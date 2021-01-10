@@ -1,5 +1,8 @@
 package cz.pasekj.pia.fiveinarow.support;
 
+/**
+ * Utility for creating pagination header record
+ */
 public class LinkUtil {
 
     public static final String REL_COLLECTION = "collection";

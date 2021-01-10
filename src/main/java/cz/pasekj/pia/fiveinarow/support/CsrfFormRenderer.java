@@ -7,6 +7,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.FacesRenderer;
 import java.io.IOException;
 
+/**
+ * Csrf token renderer that appends a csrf token to each JSF form automatically
+ */
 @FacesRenderer(
         rendererType = "javax.faces.Form",
         componentFamily = "javax.faces.Form"

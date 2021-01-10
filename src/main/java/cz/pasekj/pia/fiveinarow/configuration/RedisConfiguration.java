@@ -6,6 +6,9 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 
+/**
+ * Redis database configuration
+ */
 @Configuration
 public class RedisConfiguration {
     @Bean

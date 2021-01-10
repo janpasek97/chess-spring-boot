@@ -10,18 +10,30 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Controller of the registration page
+ */
 @Controller
 @RequiredArgsConstructor
 public class SignupController {
 
+    /** Service that handles user registration */
     private final SignupService signupService;
 
+    /**
+     * Handles POST action for user registration
+     * @param request HTTP request
+     * @return RedirectView to be rendered
+     */
     @PostMapping("/signup")
     public RedirectView registerUser(WebRequest request){
+        // get request parameters
         String username = request.getParameter("newUsername");
         String email = request.getParameter("newEmail");
         String password = request.getParameter("newPassword");
         String passwordConfirmation = request.getParameter("newPasswordConfirm");
+
+        // call the service and display result to the user
         boolean success = signupService.signup(username, email, password, passwordConfirmation);
         if(success) {
             return new RedirectView("/login?success");

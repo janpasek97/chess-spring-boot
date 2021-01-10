@@ -12,14 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Rest API endpoint for querying information about the specified user - used in administration
+ */
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class UserInformationController {
 
+    /** UserInformation service */
     private final UserInfoService userInfoService;
+    /** OnlineUsers service */
     private final OnlineUsersService onlineUsersService;
 
+    /**
+     * Get information about the specified user as UserInfo serialized to JSON
+     * @param username username of the user to be queried
+     * @return serialized UserInfo about the specified user
+     */
     @GetMapping("/users/details/{username}")
     UserInfo getUserInfo(@PathVariable String username) {
         String email = userInfoService.getEmailOf(username);

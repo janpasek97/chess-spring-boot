@@ -17,14 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * EndGame service implementation
+ */
 @Service("endGameService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class EndGameServiceImpl implements EndGameService {
 
+    /** UserInGameEntity DAO */
     private final UserInGameRepository userInGameRepository;
+    /** GameEntity DAO */
     private final GameRepository gameRepository;
+    /** UserEntity DAO */
     private final UserRepository userRepository;
+    /** GameResultEntity DAO */
     private final GameResultsRepository gameResultsRepository;
 
     @Override

@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
+/**
+ * Implementation of SignupService for user registration
+ */
 @Service("signupService")
 @Getter
 @Setter
@@ -21,14 +24,20 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class SignupServiceImpl implements SignupService {
 
+    /** UserEntity DAO */
     private final UserRepository userRepo;
+    /** RoleEntity DAO */
     private final RoleRepository roleRepo;
+    /** password strength validation service */
     private final PasswordValidationService passwordValidationService;
+    /** password encoder */
     private final PasswordEncoder encoder;
 
+    /** name of the user role */
     @Value("${userRole}")
     private String userRoleName;
 
+    /** last error message */
     String errorMessage = "";
 
     @Override

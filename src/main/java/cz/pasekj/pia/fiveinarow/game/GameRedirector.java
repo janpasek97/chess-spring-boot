@@ -14,15 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Request filter that redirects all users that are in game into the gameplay
+ */
 @Component
 @RequiredArgsConstructor
 @Order(1)
 public class GameRedirector implements Filter {
 
+    /** InGameHandler service */
     private final InGameHandlerService inGameService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // redirect a user into the gameplay if it is engaged in the game
         String currentUrl = UrlUtils.buildRequestUrl((HttpServletRequest) request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null) {

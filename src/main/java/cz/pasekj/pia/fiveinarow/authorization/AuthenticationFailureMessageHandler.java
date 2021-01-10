@@ -13,9 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * AuthenticationFailureMessageHandler that configures parameters in server response to display correct error message
+ */
 @Component
 public class AuthenticationFailureMessageHandler implements AuthenticationFailureHandler {
 
+    /** ServletContext */
     @Autowired
     private ServletContext context;
 

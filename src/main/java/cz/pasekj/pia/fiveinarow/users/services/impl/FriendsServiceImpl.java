@@ -18,12 +18,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Friends service implementation
+ */
 @Service("friendsService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class FriendsServiceImpl implements FriendsService {
-
+    /** UserEntity DAO */
     private final UserRepository userRepository;
+    /** Online users service */
     private final OnlineUsersService onlineUsersService;
 
     @Override

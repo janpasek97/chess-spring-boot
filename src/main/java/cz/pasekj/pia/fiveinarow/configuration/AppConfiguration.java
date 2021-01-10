@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletContext;
 
+/**
+ * Application configuration for URL rewriting
+ */
 @Configuration
 public class AppConfiguration extends HttpConfigurationProvider {
 
@@ -36,6 +39,7 @@ public class AppConfiguration extends HttpConfigurationProvider {
         return 10;
     }
 
+    /** PasswordEncoder bean definition */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

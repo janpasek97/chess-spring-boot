@@ -16,13 +16,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Game result provider service implementation
+ */
 @Service("gameResultsService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class GameResultsServiceImpl implements GameResultService {
 
+    /** Format of the displayed date */
     @Value("${dateTimeFormat}")
     private String dateTimeFormat;
+    /** Service used to retrieve current user information */
     private final UserInfoService userInfoService;
 
     @Override
@@ -52,6 +57,10 @@ public class GameResultsServiceImpl implements GameResultService {
         return result;
     }
 
+    /**
+     * GameResultDateComparator used for sorting game results
+     * Implemented as simple comparison of the timestamps
+     */
     private static class GameResultDateComparator implements Comparator<GameResultEntity> {
 
         @Override

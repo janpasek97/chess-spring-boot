@@ -15,14 +15,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * In game handler implementation
+ */
 @Service("inGameHandlerService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class InGameHandlerServiceImpl implements InGameHandlerService {
 
+    /** GameEntity DAO */
     private final GameRepository gameRepository;
+    /** UserInGameEntity DAO */
     private final UserInGameRepository userInGameRepository;
-    private final GameResultsRepository gameResultsRepository;
+    /** UserEntity DAO */
     private final UserRepository userRepository;
 
     @Override

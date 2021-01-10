@@ -9,7 +9,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.util.StringJoiner;
 
-@SuppressWarnings({ "rawtypes" })
+/**
+ * Listener for publishing paginated result
+ * - automatically add a record into the response header with link to first, previos, next and last page
+ * Implementation from www.baeldung.com
+ */
 @Component
 class PaginatedResultsRetrievedListener implements ApplicationListener<PaginatedResultsRetrievedEvent> {
 

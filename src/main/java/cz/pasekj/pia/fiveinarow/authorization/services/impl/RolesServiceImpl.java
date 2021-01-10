@@ -14,12 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * RolesService implementation for checking privileges and finding all possible role based on the database
+ */
 @Service("rolesService")
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 public class RolesServiceImpl implements RolesService {
 
+    /** RoleEntity DAO */
     private final RoleRepository roleRepository;
+    /** UserEntity DAO */
     private final UserRepository userRepository;
 
     @Override
