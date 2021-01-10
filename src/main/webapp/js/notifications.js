@@ -4,6 +4,9 @@ var stompClient = Stomp.over(socket);
 var sessionId = "";
 var toastID = 0;
 
+/**
+ * Connect to WS endpoint
+ */
 stompClient.connect({}, function (frame) {
     var url = stompClient.ws._transport.url;
     url = url.replace(
@@ -19,6 +22,10 @@ stompClient.connect({}, function (frame) {
 
 });
 
+/**
+ * Add a new friend request
+ * @param username username to add to a friendlist
+ */
 function addFriend(username) {
     var from = $("#usernameHidden").val();
     var to = username;
@@ -27,6 +34,10 @@ function addFriend(username) {
         JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_ADD"}));
 }
 
+/**
+ * Remove  friend button event
+ * @param username username to remove from the friends list
+ */
 function removeFriend(username) {
     var from = $("#usernameHidden").val();
     var to = username;
@@ -35,6 +46,10 @@ function removeFriend(username) {
         JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_REMOVE"}));
 }
 
+/**
+ * Accept a fried request
+ * @param username username of the friend
+ */
 function acceptFriend(username) {
     var from = $("#usernameHidden").val();
     var to = username;
@@ -42,6 +57,10 @@ function acceptFriend(username) {
         JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_ACCEPT"}));
 }
 
+/**
+ * Refuse a friend request
+ * @param username username whose friendship to refuse
+ */
 function refuseFriend(username) {
     var from = $("#usernameHidden").val();
     var to = username;
@@ -49,6 +68,10 @@ function refuseFriend(username) {
         JSON.stringify({'from':from, 'to':to, "action": "FRIENDS_REFUSE"}));
 }
 
+/**
+ * Handle notification message received
+ * @param message received message
+ */
 function handleNotification(message) {
    if(message.action === "FRIENDS_ADD") {
        handleAddFriendNotification(message);
@@ -59,6 +82,10 @@ function handleNotification(message) {
    }
 }
 
+/**
+ * Display accept friend notification
+ * @param message received message
+ */
 function handleFriendsAcceptNotification(message){
     toastID++;
     toast = '<div id="toast-'+toastID+'" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">';
@@ -78,6 +105,10 @@ function handleFriendsAcceptNotification(message){
     refresh();
 }
 
+/**
+ * Display friendship request notification
+ * @param message recevied message
+ */
 function handleAddFriendNotification(message) {
     toastID++;
     toast = '<div id="toast-'+toastID+'" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">';

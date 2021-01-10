@@ -5,8 +5,14 @@ var currentPage = 0;
 var lastLoadURL = ""
 const usersPerPage = 4;
 
+/**
+ * Automatically reload user list 1x 10s
+ */
 setInterval(function(){loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage)}, 10000);
 
+/**
+ * On remove friend modal shown event
+ */
 $('#removeFriendModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var user = button.data('whatever');
@@ -15,6 +21,11 @@ $('#removeFriendModal').on('show.bs.modal', function (event) {
     modal.find('#removeFriendConfirmBtn').attr("onclick", "removeFriend('"+ user +"'); refresh();");
 });
 
+/**
+ * Refresh user list after given time
+ * @param time delay time
+ * @returns {Promise<void>}
+ */
 async function refresh(time = 500) {
     if (time > 0) {
         await sleep(time);
@@ -22,6 +33,9 @@ async function refresh(time = 500) {
     loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage);
 }
 
+/**
+ * Display online users
+ */
 function navOnlineActive() {
     currentPage = 0;
     navAll.removeClass("active");
@@ -30,6 +44,9 @@ function navOnlineActive() {
     loadUsersFromUrl("/users/online", currentPage, usersPerPage);
 }
 
+/**
+ * Display friends
+ */
 function navFriendsActive() {
     currentPage = 0;
     navAll.removeClass("active");
@@ -38,6 +55,9 @@ function navFriendsActive() {
     loadUsersFromUrl("/users/friends", currentPage, usersPerPage);
 }
 
+/**
+ * Display all users
+ */
 function navAllActive() {
     currentPage = 0;
     navAll.addClass("active");
@@ -46,6 +66,12 @@ function navAllActive() {
     loadUsersFromUrl("/users/all", currentPage, usersPerPage)
 }
 
+/**
+ * Load page of user list from given URL
+ * @param url url to  load from
+ * @param page page number to load
+ * @param size page size
+ */
 function loadUsersFromUrl(url, page, size) {
     lastLoadURL = url;
     var pagination = {"page": page, "size": size};
@@ -100,12 +126,19 @@ function loadUsersFromUrl(url, page, size) {
     });
 }
 
+/**
+ * Start a new game button event
+ * @param username username of the opponent
+ */
 function startGame(username){
     $("#newGameOpponent").val(username);
     $("#newOpponentName").html(username);
     $("#newGameModal").modal("show");
 }
 
+/**
+ * Send request to start a game
+ */
 function askGame(){
     var currentUser = $("#usernameHidden").val();
     var opponent = $("#newGameOpponent").val();

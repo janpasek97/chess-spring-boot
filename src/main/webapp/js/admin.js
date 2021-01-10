@@ -4,14 +4,23 @@ const usersPerPage = 4;
 
 var username = "";
 
+/**
+ * Hide error message
+ */
 function hideError() {
     $("#saveErrorAlert").attr("hidden", "hidden");
 }
 
+/**
+ * Hide success message
+ */
 function hideOk() {
     $("#saveOkAlert").attr("hidden", "hidden");
 }
 
+/**
+ * Save the modified user detials
+ */
 function saveDetails() {
     var userdata = {
         "username" : $('#inputUsernameEdit').val(),
@@ -45,6 +54,9 @@ function saveDetails() {
     })
 }
 
+/**
+ * Clear user information from the user editaion modal
+ */
 function clearModal(){
     $('#errorModalAlert').attr("hidden", "hidden");
     $('#saveDetailsBtn').removeAttr("disabled");
@@ -56,11 +68,17 @@ function clearModal(){
     });
 }
 
+/**
+ * Show modal for user editaion
+ */
 function editUser() {
     username = $("#usernameInput").val();
     $("#editModal").modal("show");
 }
 
+/**
+ * Populate edit user modal when it is opened
+ */
 $('#editModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var user = button.data('whatever');
@@ -87,7 +105,12 @@ $('#editModal').on('show.bs.modal', function (event) {
     });
 });
 
-
+/**
+ * Load page of all users
+ * @param url url to use for loading
+ * @param page page to load
+ * @param size size of the page to load
+ */
 function loadUsersFromUrl(url, page, size) {
     lastLoadURL = url;
     var pagination = {"page": page, "size": size};

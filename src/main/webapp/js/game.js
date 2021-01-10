@@ -3,6 +3,9 @@ var gameStompClient = Stomp.over(gameSocket);
 var gameSessionId = "";
 var initialized = false;
 
+/**
+ * connect to the WS endpoint
+ */
 gameStompClient.connect({}, function (frame) {
     var url = gameStompClient.ws._transport.url;
     url = url.replace(
@@ -20,6 +23,11 @@ gameStompClient.connect({}, function (frame) {
     initGame();
 });
 
+/**
+ * Reload the page after given time
+ * @param time delay
+ * @returns {Promise<void>}
+ */
 async function reload(time = 500) {
     if (time > 0) {
         await sleep(time);
@@ -38,6 +46,11 @@ var requestFrom;
 var requestWidth;
 var requestHeight;
 
+
+/**
+ * Handler received WS message
+ * @param message received message
+ */
 function handleMessage(message) {
     if(message.action === "COUNTER_MOVE") {
         draw(message.x, message.y, playerEnum[msgParsed.playerColor]);
@@ -79,6 +92,9 @@ function handleMessage(message) {
     }
 }
 
+/**
+ * Accept game request
+ */
 function acceptGame(){
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {
@@ -94,6 +110,13 @@ function acceptGame(){
     reload(500);
 }
 
+/**
+ * Create a new game
+ * @param user current user
+ * @param opponent opponent user
+ * @param width board width
+ * @param height board height
+ */
 function newGame(user, opponent, width, height) {
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {
@@ -108,6 +131,12 @@ function newGame(user, opponent, width, height) {
         }));
 }
 
+/**
+ * Draw board of given size and populate it with received init data
+ * @param initBoard init board state
+ * @param width width of the board
+ * @param height height of the board
+ */
 function drawBoard(initBoard, width=16, height=16) {
     $("#boardLoading").hide();
     $("#board").show();
@@ -143,6 +172,9 @@ function drawBoard(initBoard, width=16, height=16) {
     }
 }
 
+/**
+ * Send request for game init information
+ */
 function initGame() {
     if(initialized === true) return;
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
@@ -158,6 +190,10 @@ function initGame() {
         }));
 }
 
+/**
+ * Handle click on the canvas
+ * @param e click event
+ */
 function onCanvasClick(e) {
     if(turn !== myColor) return;
     var eventX = e.offsetX - offset;
@@ -190,6 +226,9 @@ function onCanvasClick(e) {
     changeTurnImage();
 }
 
+/**
+ * Change turn image
+ */
 function changeTurnImage(){
     if(turn === playerEnum.WHITE) {
         $("#turnPicture").attr("src", "/img/white_player.png");
@@ -198,6 +237,12 @@ function changeTurnImage(){
     }
 }
 
+/**
+ * Draw piece on the board
+ * @param x x coordinate
+ * @param y y coordinate
+ * @param turn color
+ */
 function draw(x, y, turn) {
     board[x][y] = turn;
 
@@ -224,16 +269,26 @@ function draw(x, y, turn) {
     context.fill();
 }
 
+/**
+ * On lost event
+ */
 function onLose() {
     window.alert("You lost the game :-(");
     window.location = "/";
 }
 
+/**
+ * On win event
+ */
 function onWin() {
     window.alert("You won the game :-)");
     window.location = "/";
 }
 
+/**
+ * On ingame chat message received event
+ * @param msg received chat message
+ */
 function messageReceived(msg) {
     $("#noMessage").hide();
 
@@ -251,6 +306,9 @@ function messageReceived(msg) {
     $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight);
 }
 
+/**
+ * Send chat message
+ */
 function messageSend() {
     $("#noMessage").hide();
     var msg = $("#chatText").val();
@@ -280,6 +338,9 @@ function messageSend() {
         }));
 }
 
+/**
+ * Surrender the game
+ */
 function surrender() {
     stompClient.send("/app-ws/secured/game", {}, JSON.stringify(
         {

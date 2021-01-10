@@ -1,13 +1,27 @@
+/**
+ * Sleeep given time of milliseconds
+ * @param ms time to sleep in milliseconds
+ * @returns {Promise<timeout>}
+ */
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+/**
+ * Get CSFR headers
+ * @returns csfr header entry
+ */
 function getHeaders() {
     var headers = Array();
     headers[_csrfHeaderName] = _csrfToken;
     return headers;
 }
 
+/**
+ * Parse pagination meta data from header
+ * @param header header to be parse
+ * @returns links to first, next, previous and last page
+ */
 function parseLinkHeader(header) {
     var parsed = {
         "first": null,
@@ -49,6 +63,10 @@ function parseLinkHeader(header) {
     return parsed;
 }
 
+/**
+ * Display pagination based on available pages
+ * @param linkInfo link info parsed from header
+ */
 function displayPagination(linkInfo) {
     var dispCurrent = false;
 
@@ -75,11 +93,17 @@ function displayPagination(linkInfo) {
     $("#currentPageNr").html(currentPage+1);
 }
 
+/**
+ * Go to the next page of pagination
+ */
 function onNextPage() {
     currentPage += 1;
     loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage);
 }
 
+/**
+ * Go to the previous page of pagination
+ */
 function onPrevPage() {
     currentPage -= 1;
     loadUsersFromUrl(lastLoadURL, currentPage, usersPerPage);
