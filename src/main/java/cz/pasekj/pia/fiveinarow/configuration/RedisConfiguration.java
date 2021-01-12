@@ -2,6 +2,7 @@ package cz.pasekj.pia.fiveinarow.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -13,7 +14,8 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 public class RedisConfiguration {
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("red", 6379);
+        return new JedisConnectionFactory(config);
     }
 
     @Bean

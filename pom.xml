@@ -95,7 +95,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
+<!--			<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
@@ -227,6 +227,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>FiveInARow</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -260,6 +261,8 @@
 			<plugin>
 				<groupId>org.joinfaces</groupId>
 				<artifactId>joinfaces-maven-plugin</artifactId>
+				<configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

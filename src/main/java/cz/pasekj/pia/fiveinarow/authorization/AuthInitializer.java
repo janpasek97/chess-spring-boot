@@ -6,6 +6,7 @@ import cz.pasekj.pia.fiveinarow.data.repository.RoleRepository;
 import cz.pasekj.pia.fiveinarow.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -23,15 +24,17 @@ import java.util.List;
  */
 @Component
 @Transactional
-@RequiredArgsConstructor
 public class AuthInitializer implements InitializingBean, WebApplicationInitializer {
 
     /** UserEntity DAO */
-    private final UserRepository userRepo;
+    @Autowired
+    private UserRepository userRepo;
     /** RoleEntity DAO */
-    private final RoleRepository roleRepo;
+    @Autowired
+    private RoleRepository roleRepo;
     /** password encoder */
-    private final PasswordEncoder encoder;
+    @Autowired
+    private PasswordEncoder encoder;
 
     // default login configurations
     @Value("${defUsername}")

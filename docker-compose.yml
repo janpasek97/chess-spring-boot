@@ -1,5 +1,13 @@
 version: "3.3"
 services:
+    app:
+        build: .
+        image: fiveinarow
+        depends_on:
+            - red
+            - pg
+        ports:
+            - "8080:8080"    
     pg:
         image: "postgres"
         ports:
@@ -31,3 +39,4 @@ volumes:
     pgdata: {}
     redisdata: {}
     pgadmindata: {}
+
