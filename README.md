@@ -39,7 +39,7 @@ The whole application can be run by using only 3 commands from the `root of the 
 2. `docker build -t pia/pasekj .` - build a docker image of the application
 3. `docker-compose up -d` - runs the application including required database servers
 
-After that, you can display the application on [localhost:8080](localhost:8080)
+After that, you can display the application on [localhost:8080](http://localhost:8080)
 
 ### Troubleshooting
 
