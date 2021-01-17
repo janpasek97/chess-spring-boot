@@ -40,6 +40,10 @@ public class SignupServiceImpl implements SignupService {
     /** last error message */
     String errorMessage = "";
 
+    // length constraints based on DB setup
+    private final int MAX_UNAME_LEN = 20;
+    private final int MAX_EMAIL_LEN = 50;
+
     @Override
     public String getErrorMessage() {
         return errorMessage;
@@ -53,15 +57,26 @@ public class SignupServiceImpl implements SignupService {
         if(!EmailValidator.getInstance().isValid(email)) {
             error = true;
             errorMessage = "Email has incorrect format!";
-        } else if (userRepo.findByEmail(email) != null) {
+        } else if (email.length() > MAX_EMAIL_LEN) {
+            error = true;
+            errorMessage = "Email must not have more than 50 characters!";
+        }
+        else if (userRepo.findByEmail(email) != null) {
             error = true;
             errorMessage = "Email already taken!";
         }
+
 
         // validate username
         if(username.length() <= 0 || userRepo.findByUsername(username) != null) {
             error = true;
             errorMessage = username.length() <= 0 ? "Username must not be empty!" : "Username already taken!";
+        }
+
+        // validate length of username based on DB constraint
+        if(username.length() > MAX_UNAME_LEN) {
+            error = true;
+            errorMessage = "Username must not have more than 20 characters!";
         }
 
         // validate password
